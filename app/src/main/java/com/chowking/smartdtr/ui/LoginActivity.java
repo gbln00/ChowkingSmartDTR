@@ -9,9 +9,9 @@ import android.widget.TextView;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProvider;
 import com.chowking.smartdtr.R;
-import com.chowking.smartdtr.ui.admin.AdminHomeActivity;
-import com.chowking.smartdtr.ui.crew.CrewHomeActivity;
-import com.chowking.smartdtr.ui.manager.ManagerHomeActivity;
+import com.chowking.smartdtr.ui.admin.AdminHostActivity;
+import com.chowking.smartdtr.ui.crew.CrewHostActivity;
+import com.chowking.smartdtr.ui.manager.ManagerHostActivity;
 import com.chowking.smartdtr.utils.SessionManager;
 import com.chowking.smartdtr.viewmodel.LoginViewModel;
 
@@ -67,11 +67,11 @@ public class LoginActivity extends AppCompatActivity {
         Intent intent;
         switch (role) {
             case "MANAGER":
-                intent = new Intent(this, ManagerHomeActivity.class); break;
+                intent = new Intent(this, ManagerHostActivity.class); break;
             case "ADMIN":
-                intent = new Intent(this, AdminHomeActivity.class);   break;
+                intent = new Intent(this, AdminHostActivity.class);   break;
             default:
-                intent = new Intent(this, CrewHomeActivity.class);
+                intent = new Intent(this, CrewHostActivity.class);
         }
         startActivity(intent);
         finish(); // remove LoginActivity from back stack

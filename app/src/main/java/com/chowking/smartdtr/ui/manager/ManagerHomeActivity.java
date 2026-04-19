@@ -73,7 +73,6 @@ public class ManagerHomeActivity extends AppCompatActivity {
         adapter.setOnLongClickListener(this::showEditDialog);
 
         // Quick-date chip group
-        ChipGroup chipGroup = findViewById(R.id.chipGroupDate);
         ((Chip) findViewById(R.id.chipToday)).setOnClickListener(v -> loadDate(getTodayStr()));
         ((Chip) findViewById(R.id.chipYesterday)).setOnClickListener(v -> loadDate(getYesterdayStr()));
         ((Chip) findViewById(R.id.chipThisWeek)).setOnClickListener(v -> loadDate(currentDate));
@@ -83,10 +82,10 @@ public class ManagerHomeActivity extends AppCompatActivity {
 
         // Toolbar buttons
         findViewById(R.id.btnReport).setOnClickListener(v ->
-                startActivity(new Intent(this, ReportActivity.class))
+                Toast.makeText(this, "Use Sidebar for Reports", Toast.LENGTH_SHORT).show()
         );
         findViewById(R.id.btnSalary).setOnClickListener(v ->
-                startActivity(new Intent(this, SalaryReportActivity.class))
+                Toast.makeText(this, "Use Sidebar for Salary", Toast.LENGTH_SHORT).show()
         );
         findViewById(R.id.btnExport).setOnClickListener(v -> exportCsv());
 

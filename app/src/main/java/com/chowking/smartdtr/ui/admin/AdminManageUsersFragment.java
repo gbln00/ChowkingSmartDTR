@@ -30,7 +30,7 @@ public class AdminManageUsersFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater,
                              @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_admin_manage_users, container, false);
+        return inflater.inflate(R.layout.fragment_admin_manage_user, container, false);
     }
 
     @Override

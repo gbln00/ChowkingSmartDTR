@@ -1,9 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- app/src/main/AndroidManifest.xml -->
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
 
-    <!-- Camera permission for QR scanning -->
     <uses-permission android:name="android.permission.CAMERA"/>
     <uses-feature android:name="android.hardware.camera" android:required="false"/>
 
@@ -17,7 +15,6 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.ChowkingSmartDTR">
 
-        <!-- Splash (launcher entry point) -->
         <activity
             android:name=".ui.SplashActivity"
             android:exported="true"
@@ -28,28 +25,40 @@
             </intent-filter>
         </activity>
 
-        <!-- Auth -->
-        <activity android:name=".ui.LoginActivity"
+        <activity
+            android:name=".ui.LoginActivity"
             android:windowSoftInputMode="adjustResize"/>
 
-        <!-- Crew -->
-        <activity android:name=".ui.crew.CrewHomeActivity"/>
-        <activity android:name=".ui.crew.CrewHistoryActivity"/>
+        <!-- Crew host (BottomNav) -->
+        <activity
+            android:name=".ui.crew.CrewHostActivity"
+            android:windowSoftInputMode="adjustResize"/>
 
-        <!-- Manager -->
-        <activity android:name=".ui.manager.ManagerHomeActivity"/>
-        <activity android:name=".ui.manager.ReportActivity"/>
-        <activity android:name=".ui.manager.SalaryReportActivity"/>
+        <activity
+            android:name=".ui.crew.CrewHistoryActivity"
+            android:label="My History"
+            android:parentActivityName=".ui.crew.CrewHomeActivity" />
 
-        <!-- Admin -->
-        <activity android:name=".ui.admin.AdminHomeActivity"/>
+        <!-- Manager host (Drawer) -->
+        <activity
+            android:name=".ui.manager.ManagerHostActivity"
+            android:windowSoftInputMode="adjustResize"/>
 
+        <!-- Admin host (Drawer) -->
+        <activity
+            android:name=".ui.admin.AdminHostActivity"
+            android:windowSoftInputMode="adjustResize"/>
 
-        <!--
-            FileProvider — required for sharing CSV files on API 24+.
-            authority must match: context.getPackageName() + ".fileprovider"
-            The file_paths.xml defines which directories can be shared.
-        -->
+        <activity
+            android:name=".ui.admin.AdminHomeActivity"
+            android:windowSoftInputMode="adjustResize"/>
+        <activity
+            android:name=".ui.crew.CrewHomeActivity"
+            android:windowSoftInputMode="adjustResize"/>
+        <activity
+            android:name=".ui.manager.ManagerHomeActivity"
+            android:windowSoftInputMode="adjustResize"/>
+
         <provider
             android:name="androidx.core.content.FileProvider"
             android:authorities="${applicationId}.fileprovider"

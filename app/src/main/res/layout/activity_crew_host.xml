@@ -38,7 +38,6 @@
         app:menu="@menu/menu_crew_nav"
         app:itemIconTint="@color/nav_item_color"
         app:itemTextColor="@color/nav_item_color"
-        app:itemActiveIndicatorColor="@color/chowking_red_light"
         app:labelVisibilityMode="labeled"
         style="@style/Widget.Material3.BottomNavigationView"/>
 
