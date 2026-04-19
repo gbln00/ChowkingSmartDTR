@@ -44,6 +44,7 @@
         <!-- Admin -->
         <activity android:name=".ui.admin.AdminHomeActivity"/>
 
+
         <!--
             FileProvider — required for sharing CSV files on API 24+.
             authority must match: context.getPackageName() + ".fileprovider"

@@ -1,12 +1,14 @@
 package com.chowking.smartdtr.ui.crew;
 
 import android.os.Bundle;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.TextView;
 
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
-import androidx.core.view.WindowCompat;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -14,7 +16,6 @@ import com.chowking.smartdtr.R;
 import com.chowking.smartdtr.adapter.AttendanceAdapter;
 import com.chowking.smartdtr.database.AppDatabase;
 import com.chowking.smartdtr.model.AttendanceRecord;
-import com.chowking.smartdtr.utils.EdgeToEdgeHelper;
 import com.chowking.smartdtr.utils.SessionManager;
 
 import java.util.ArrayList;
@@ -22,41 +23,36 @@ import java.util.List;
 import java.util.Locale;
 import java.util.concurrent.Executors;
 
-public class CrewHistoryActivity extends AppCompatActivity {
+public class CrewHistoryFragment extends Fragment {
+
+    @Nullable
+    @Override
+    public View onCreateView(@NonNull LayoutInflater inflater,
+                             @Nullable ViewGroup container,
+                             @Nullable Bundle savedInstanceState) {
+        return inflater.inflate(R.layout.fragment_crew_history, container, false);
+    }
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        WindowCompat.setDecorFitsSystemWindows(getWindow(), false);
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_crew_history);
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
 
-        EdgeToEdgeHelper.applyInsets(findViewById(R.id.rootLayout));
+        SessionManager session = new SessionManager(requireContext());
 
-        Toolbar toolbar = findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
-        if (getSupportActionBar() != null) {
-            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-            getSupportActionBar().setTitle("My Attendance History");
-        }
-        toolbar.setNavigationOnClickListener(v -> finish());
-
-        SessionManager session = new SessionManager(this);
-
-        RecyclerView rv = findViewById(R.id.rvHistory);
+        RecyclerView rv = view.findViewById(R.id.rvHistory);
         AttendanceAdapter adapter = new AttendanceAdapter(new ArrayList<>());
-        rv.setLayoutManager(new LinearLayoutManager(this));
+        rv.setLayoutManager(new LinearLayoutManager(requireContext()));
         rv.setAdapter(adapter);
 
-        TextView tvSummary   = findViewById(R.id.tvSummary);
-        TextView tvEmptyState = findViewById(R.id.tvEmptyState);
+        TextView tvSummary    = view.findViewById(R.id.tvSummary);
+        TextView tvEmptyState = view.findViewById(R.id.tvEmptyState);
 
-        // Load this crew member's full history off the main thread
         Executors.newSingleThreadExecutor().execute(() -> {
-            List<AttendanceRecord> records = AppDatabase.getInstance(this)
+            List<AttendanceRecord> records = AppDatabase.getInstance(requireContext())
                     .attendanceDao()
                     .getRecordsByEmployee(session.getEmployeeId());
 
-            runOnUiThread(() -> {
+            requireActivity().runOnUiThread(() -> {
                 if (records.isEmpty()) {
                     tvEmptyState.setVisibility(View.VISIBLE);
                     tvSummary.setVisibility(View.GONE);
@@ -64,25 +60,16 @@ public class CrewHistoryActivity extends AppCompatActivity {
                     tvEmptyState.setVisibility(View.GONE);
                     tvSummary.setVisibility(View.VISIBLE);
                     adapter.updateRecords(records);
-                    showSummary(records, tvSummary);
+
+                    int done = 0;
+                    float total = 0;
+                    for (AttendanceRecord r : records) {
+                        if (r.timeOut > 0) { done++; total += r.totalHours; }
+                    }
+                    tvSummary.setText(String.format(Locale.getDefault(),
+                            "Shifts: %d  ·  Total hours: %.1f", done, total));
                 }
             });
         });
-    }
-
-    private void showSummary(List<AttendanceRecord> records, TextView tvSummary) {
-        int completed = 0;
-        float totalHours = 0;
-        for (AttendanceRecord r : records) {
-            if (r.timeOut > 0) {
-                completed++;
-                totalHours += r.totalHours;
-            }
-        }
-        tvSummary.setText(String.format(
-                Locale.getDefault(),
-                "Total shifts: %d  ·  Total hours: %.1f",
-                completed, totalHours
-        ));
     }
 }

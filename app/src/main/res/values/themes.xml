@@ -1,9 +1,20 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
-    <!-- Base application theme. -->
     <style name="Base.Theme.ChowkingSmartDTR" parent="Theme.Material3.DayNight.NoActionBar">
-        <!-- Customize your light theme here. -->
-        <!-- <item name="colorPrimary">@color/my_light_primary</item> -->
+        <item name="colorPrimary">@color/chowking_red</item>
+        <item name="colorPrimaryDark">@color/chowking_red_dark</item>
+        <item name="colorOnPrimary">@color/white</item>
+        <item name="colorSurface">@color/surface_card</item>
+        <item name="android:windowBackground">@color/surface_page</item>
+        <item name="navigationBarColor">@color/surface_card</item>
+        <item name="android:navigationBarColor">@color/surface_card</item>
     </style>
 
     <style name="Theme.ChowkingSmartDTR" parent="Base.Theme.ChowkingSmartDTR" />
+
+    <style name="Widget.App.BottomNavigationView" parent="Widget.Material3.BottomNavigationView">
+        <item name="itemIconTint">@color/nav_item_color</item>
+        <item name="itemTextColor">@color/nav_item_color</item>
+        <item name="itemActiveIndicatorColor">@color/chowking_red_light</item>
+        <item name="android:background">@color/surface_card</item>
+    </style>
 </resources>

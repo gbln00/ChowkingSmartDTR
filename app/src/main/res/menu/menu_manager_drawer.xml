@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <group android:id="@+id/group_main" android:checkableBehavior="single">
+        <item
+            android:id="@+id/nav_manager_dashboard"
+            android:icon="@drawable/ic_nav_dashboard"
+            android:title="Dashboard"/>
+        <item
+            android:id="@+id/nav_manager_attendance"
+            android:icon="@drawable/ic_nav_attendance"
+            android:title="Attendance"/>
+        <item
+            android:id="@+id/nav_manager_report"
+            android:icon="@drawable/ic_nav_report"
+            android:title="Report"/>
+        <item
+            android:id="@+id/nav_manager_salary"
+            android:icon="@drawable/ic_nav_salary"
+            android:title="Salary"/>
+    </group>
+    <group android:id="@+id/group_account">
+        <item
+            android:id="@+id/nav_logout"
+            android:icon="@drawable/ic_nav_logout"
+            android:title="Log out"/>
+    </group>
+</menu>

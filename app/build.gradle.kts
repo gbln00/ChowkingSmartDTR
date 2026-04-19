@@ -4,11 +4,7 @@ plugins {
 
 android {
     namespace = "com.chowking.smartdtr"
-    compileSdk {
-        version = release(36) {
-            minorApiLevel = 1
-        }
-    }
+    compileSdk = 36
 
     defaultConfig {
         applicationId = "com.chowking.smartdtr"
@@ -16,7 +12,6 @@ android {
         targetSdk = 36
         versionCode = 1
         versionName = "1.0"
-
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
 
@@ -47,16 +42,14 @@ dependencies {
     implementation(libs.room.runtime)
     annotationProcessor(libs.room.compiler)
 
-    // ViewModel and LiveData (MVVM architecture)
     implementation(libs.lifecycle.viewmodel)
     implementation(libs.lifecycle.livedata)
 
-    // RecyclerView (for attendance lists)
     implementation(libs.recyclerview)
 
-    // QR Code scanner — ZXing (Java-friendly)
     implementation(libs.zxing.android.embedded)
 
-    // Password hashing — BCrypt (never store plain text!)
     implementation(libs.jbcrypt)
+
+    implementation(libs.mpandroidchart)
 }
