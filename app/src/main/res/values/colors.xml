@@ -7,4 +7,5 @@
     <color name="color_overtime">#4CAF50</color>
     <color name="color_present">#4CAF50</color>
     <color name="color_absent">#F44336</color>
+    <color name="color_still_in">#1565C0</color>
 </resources>
