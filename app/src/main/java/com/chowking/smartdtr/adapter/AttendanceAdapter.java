@@ -4,10 +4,14 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
+
 import com.chowking.smartdtr.R;
 import com.chowking.smartdtr.model.AttendanceRecord;
+import com.google.android.material.chip.Chip;
+
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
@@ -16,10 +20,20 @@ import java.util.Locale;
 public class AttendanceAdapter extends
         RecyclerView.Adapter<AttendanceAdapter.ViewHolder> {
 
+    public interface OnRecordLongClickListener {
+        void onLongClick(AttendanceRecord record);
+    }
+
     private List<AttendanceRecord> records;
+    private OnRecordLongClickListener longClickListener;
 
     public AttendanceAdapter(List<AttendanceRecord> records) {
         this.records = records;
+    }
+
+    /** Optional: set a long-click listener to enable edit/delete (Manager only) */
+    public void setOnLongClickListener(OnRecordLongClickListener listener) {
+        this.longClickListener = listener;
     }
 
     public void updateRecords(List<AttendanceRecord> newRecords) {
@@ -36,26 +50,44 @@ public class AttendanceAdapter extends
     }
 
     @Override
-    public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull ViewHolder h, int position) {
         AttendanceRecord rec = records.get(position);
-        SimpleDateFormat fmt =
+        SimpleDateFormat timeFmt =
                 new SimpleDateFormat("hh:mm a", Locale.getDefault());
 
-        holder.tvEmployeeId.setText(rec.employeeId);
-        holder.tvTimeIn.setText("Time In:  " + fmt.format(new Date(rec.timeIn)));
+        h.tvEmployeeId.setText(rec.employeeId);
+        h.tvDate.setText(rec.date);
+        h.tvTimeIn.setText("In:  " + timeFmt.format(new Date(rec.timeIn)));
 
         if (rec.timeOut == 0) {
-            holder.tvTimeOut.setText("Time Out: --");
-            holder.tvTotalHours.setText("Still clocked in");
-            holder.tvStatusBadge.setText("IN");
-            holder.tvStatusBadge.setBackgroundColor(0xFF1565C0);
+            h.tvTimeOut.setText("Out: --");
+            h.tvTotalHours.setText("Still clocked in");
+            h.chipStatus.setText("IN");
+            h.chipStatus.setChipBackgroundColorResource(R.color.color_still_in);
+            h.chipStatus.setTextColor(0xFFFFFFFF);
         } else {
-            holder.tvTimeOut.setText("Time Out: " + fmt.format(new Date(rec.timeOut)));
-            holder.tvTotalHours.setText(
-                    String.format(Locale.getDefault(), "Total: %.2f hrs", rec.totalHours)
+            h.tvTimeOut.setText("Out: " + timeFmt.format(new Date(rec.timeOut)));
+            h.tvTotalHours.setText(
+                    String.format(Locale.getDefault(), "%.2f hrs", rec.totalHours)
             );
-            holder.tvStatusBadge.setText("DONE");
-            holder.tvStatusBadge.setBackgroundColor(0xFF2E7D32);
+
+            if (rec.totalHours > 8) {
+                h.chipStatus.setText("OT");
+                h.chipStatus.setChipBackgroundColorResource(R.color.color_overtime);
+                h.chipStatus.setTextColor(0xFFFFFFFF);
+            } else {
+                h.chipStatus.setText("DONE");
+                h.chipStatus.setChipBackgroundColorResource(R.color.color_present);
+                h.chipStatus.setTextColor(0xFFFFFFFF);
+            }
+        }
+
+        // Long-press to edit (used by manager)
+        if (longClickListener != null) {
+            h.itemView.setOnLongClickListener(v -> {
+                longClickListener.onLongClick(rec);
+                return true;
+            });
         }
     }
 
@@ -63,14 +95,17 @@ public class AttendanceAdapter extends
     public int getItemCount() { return records == null ? 0 : records.size(); }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
-        TextView tvEmployeeId, tvTimeIn, tvTimeOut, tvTotalHours, tvStatusBadge;
+        TextView tvEmployeeId, tvDate, tvTimeIn, tvTimeOut, tvTotalHours;
+        Chip     chipStatus;
+
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
-            tvEmployeeId   = itemView.findViewById(R.id.tvEmployeeId);
-            tvTimeIn       = itemView.findViewById(R.id.tvTimeIn);
-            tvTimeOut      = itemView.findViewById(R.id.tvTimeOut);
-            tvTotalHours   = itemView.findViewById(R.id.tvTotalHours);
-            tvStatusBadge  = itemView.findViewById(R.id.tvStatusBadge);
+            tvEmployeeId = itemView.findViewById(R.id.tvEmployeeId);
+            tvDate       = itemView.findViewById(R.id.tvDate);
+            tvTimeIn     = itemView.findViewById(R.id.tvTimeIn);
+            tvTimeOut    = itemView.findViewById(R.id.tvTimeOut);
+            tvTotalHours = itemView.findViewById(R.id.tvTotalHours);
+            chipStatus   = itemView.findViewById(R.id.chipStatus);
         }
     }
 }
