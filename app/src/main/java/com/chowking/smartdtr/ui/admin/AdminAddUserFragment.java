@@ -44,10 +44,20 @@ public class AdminAddUserFragment extends Fragment {
         TextView tvResult            = view.findViewById(R.id.tvAddResult);
         MaterialButton btnAdd        = view.findViewById(R.id.btnAddUser);
 
+        // ── Role dropdown fix ──────────────────────────────────────────────
         String[] roles = {"CREW", "MANAGER", "ADMIN"};
-        acRole.setAdapter(new ArrayAdapter<>(requireContext(),
-                android.R.layout.simple_dropdown_item_1line, roles));
+        ArrayAdapter<String> roleAdapter = new ArrayAdapter<>(
+                requireContext(),
+                android.R.layout.simple_dropdown_item_1line,
+                roles);
+        acRole.setAdapter(roleAdapter);
         acRole.setText("CREW", false);
+
+        // Force dropdown to open on click/focus — fixes non-clickable dropdown
+        acRole.setOnClickListener(v -> acRole.showDropDown());
+        acRole.setOnFocusChangeListener((v, hasFocus) -> {
+            if (hasFocus) acRole.showDropDown();
+        });
 
         btnAdd.setOnClickListener(v -> {
             String id       = getText(etId);

@@ -63,8 +63,10 @@ public class ManagerHostActivity extends AppCompatActivity
         int id = item.getItemId();
         if (id == R.id.nav_manager_dashboard) {
             loadFragment(new ManagerDashboardFragment(), "Dashboard");
+        } else if (id == R.id.nav_manager_scan) {
+            loadFragment(new ManagerScanFragment(), "Scan Attendance");
         } else if (id == R.id.nav_manager_attendance) {
-            loadFragment(new ManagerAttendanceFragment(), "Attendance");
+            loadFragment(new ManagerAttendanceFragment(), "Attendance Log");
         } else if (id == R.id.nav_manager_report) {
             loadFragment(new ManagerReportFragment(), "Report");
         } else if (id == R.id.nav_manager_salary) {
@@ -98,4 +100,12 @@ public class ManagerHostActivity extends AppCompatActivity
                 .show();
     }
 
+    @Override
+    public void onBackPressed() {
+        if (drawerLayout.isDrawerOpen(GravityCompat.START)) {
+            drawerLayout.closeDrawer(GravityCompat.START);
+        } else {
+            super.onBackPressed();
+        }
+    }
 }

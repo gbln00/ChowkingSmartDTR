@@ -15,6 +15,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.ChowkingSmartDTR">
 
+        <!-- Splash / entry point -->
         <activity
             android:name=".ui.SplashActivity"
             android:exported="true"
@@ -29,31 +30,36 @@
             android:name=".ui.LoginActivity"
             android:windowSoftInputMode="adjustResize"/>
 
-        <!-- Crew host (BottomNav) -->
+        <!-- Crew host — Navigation Drawer (same pattern as Manager + Admin) -->
         <activity
             android:name=".ui.crew.CrewHostActivity"
             android:windowSoftInputMode="adjustResize"/>
 
+        <!-- Standalone crew history screen (kept for back-navigation from other entry points) -->
         <activity
             android:name=".ui.crew.CrewHistoryActivity"
             android:label="My History"
-            android:parentActivityName=".ui.crew.CrewHomeActivity" />
+            android:parentActivityName=".ui.crew.CrewHostActivity"/>
 
-        <!-- Manager host (Drawer) -->
+        <!-- Manager host — Navigation Drawer -->
         <activity
             android:name=".ui.manager.ManagerHostActivity"
             android:windowSoftInputMode="adjustResize"/>
 
-        <!-- Admin host (Drawer) -->
+        <activity
+            android:name="com.journeyapps.barcodescanner.CaptureActivity"
+            android:screenOrientation="portrait"
+            tools:replace="android:screenOrientation"
+            android:stateNotNeeded="true" />
+
+        <!-- Admin host — Navigation Drawer -->
         <activity
             android:name=".ui.admin.AdminHostActivity"
             android:windowSoftInputMode="adjustResize"/>
 
+        <!-- Legacy standalone activities (kept for safety; not launched by default flow) -->
         <activity
             android:name=".ui.admin.AdminHomeActivity"
-            android:windowSoftInputMode="adjustResize"/>
-        <activity
-            android:name=".ui.crew.CrewHomeActivity"
             android:windowSoftInputMode="adjustResize"/>
         <activity
             android:name=".ui.manager.ManagerHomeActivity"

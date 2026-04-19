@@ -39,10 +39,9 @@ public class CrewDashboardFragment extends Fragment {
     private ImageView ivQrCode;
     private AttendanceAdapter adapter;
 
-    private Handler timerHandler;
+    private Handler  timerHandler;
     private Runnable timerRunnable;
-    private long timeInMillis = 0;
-    private boolean isClockedIn = false;
+    private long     timeInMillis = 0;
 
     @Nullable
     @Override
@@ -58,14 +57,14 @@ public class CrewDashboardFragment extends Fragment {
 
         session = new SessionManager(requireContext());
 
-        tvWelcome    = view.findViewById(R.id.tvWelcome);
-        tvDate       = view.findViewById(R.id.tvDate);
-        tvStatus     = view.findViewById(R.id.tvStatus);
-        tvTimer      = view.findViewById(R.id.tvTimer);
-        tvWeekHours  = view.findViewById(R.id.tvWeekHours);
-        tvWeekPay    = view.findViewById(R.id.tvWeekPay);
-        tvNoRecords  = view.findViewById(R.id.tvNoRecords);
-        ivQrCode     = view.findViewById(R.id.ivQrCode);
+        tvWelcome   = view.findViewById(R.id.tvWelcome);
+        tvDate      = view.findViewById(R.id.tvDate);
+        tvStatus    = view.findViewById(R.id.tvStatus);
+        tvTimer     = view.findViewById(R.id.tvTimer);
+        tvWeekHours = view.findViewById(R.id.tvWeekHours);
+        tvWeekPay   = view.findViewById(R.id.tvWeekPay);
+        tvNoRecords = view.findViewById(R.id.tvNoRecords);
+        ivQrCode    = view.findViewById(R.id.ivQrCode);
 
         tvWelcome.setText("Hello, " + session.getFullName() + "!");
         tvDate.setText(new SimpleDateFormat("EEEE, MMMM dd yyyy",
@@ -80,31 +79,33 @@ public class CrewDashboardFragment extends Fragment {
         loadDashboardData();
     }
 
+    /** Called by parent activity after a scan result changes status */
+    public void refreshStatus() {
+        stopTimer();
+        loadDashboardData();
+    }
+
     private void loadDashboardData() {
-        String today = todayStr();
+        String today     = todayStr();
         String weekStart = weekStartStr();
 
         Executors.newSingleThreadExecutor().execute(() -> {
             AppDatabase db = AppDatabase.getInstance(requireContext());
 
-            // Clock-in status
             AttendanceRecord open = db.attendanceDao()
                     .getOpenRecord(session.getEmployeeId(), today);
 
-            // Weekly hours
             float weekHours = db.attendanceDao()
                     .getTotalHoursByEmployee(session.getEmployeeId(), weekStart, today);
 
-            // Estimated pay
-            User user = db.userDao().getActiveUserByEmployeeId(session.getEmployeeId());
-            float rate = user != null ? user.hourlyRate : 76.25f;
-            float maxRegular = db.attendanceDao()
+            User user    = db.userDao().getActiveUserByEmployeeId(session.getEmployeeId());
+            float rate   = user != null ? user.hourlyRate : 76.25f;
+            float maxReg = db.attendanceDao()
                     .getDaysWorkedByEmployee(session.getEmployeeId(), weekStart, today) * 8f;
-            float regularHrs = Math.min(weekHours, maxRegular);
-            float overtimeHrs = Math.max(0, weekHours - maxRegular);
-            float estPay = (regularHrs * rate) + (overtimeHrs * rate * 1.25f);
+            float regHrs = Math.min(weekHours, maxReg);
+            float otHrs  = Math.max(0, weekHours - maxReg);
+            float estPay = (regHrs * rate) + (otHrs * rate * 1.25f);
 
-            // Last 5 records
             List<AttendanceRecord> all = db.attendanceDao()
                     .getRecordsByEmployee(session.getEmployeeId());
             List<AttendanceRecord> recent = all.size() > 5
@@ -112,13 +113,12 @@ public class CrewDashboardFragment extends Fragment {
 
             float finalEstPay = estPay;
             requireActivity().runOnUiThread(() -> {
-                // Stats
-                tvWeekHours.setText(String.format(Locale.getDefault(), "%.1f hrs", weekHours));
-                tvWeekPay.setText(String.format(Locale.getDefault(), "₱%.2f", finalEstPay));
+                tvWeekHours.setText(
+                        String.format(Locale.getDefault(), "%.1f hrs", weekHours));
+                tvWeekPay.setText(
+                        String.format(Locale.getDefault(), "₱%.2f", finalEstPay));
 
-                // Clock status
                 if (open != null) {
-                    isClockedIn  = true;
                     timeInMillis = open.timeIn;
                     updateStatusBadge(true);
                     startTimer();
@@ -126,7 +126,6 @@ public class CrewDashboardFragment extends Fragment {
                     updateStatusBadge(false);
                 }
 
-                // Recent records
                 if (recent.isEmpty()) {
                     tvNoRecords.setVisibility(View.VISIBLE);
                 } else {
@@ -137,17 +136,12 @@ public class CrewDashboardFragment extends Fragment {
         });
     }
 
-    public void refreshStatus() {
-        stopTimer();
-        loadDashboardData();
-    }
-
     private void updateStatusBadge(boolean clockedIn) {
         if (clockedIn) {
-            tvStatus.setText("● Clocked in");
+            tvStatus.setText("● Clocked in — show QR to clock out");
             tvTimer.setVisibility(View.VISIBLE);
         } else {
-            tvStatus.setText("○ Not clocked in");
+            tvStatus.setText("○ Not clocked in — show QR to clock in");
             tvTimer.setVisibility(View.GONE);
             tvTimer.setText("");
         }
@@ -195,7 +189,7 @@ public class CrewDashboardFragment extends Fragment {
 
     private String weekStartStr() {
         Calendar cal = Calendar.getInstance();
-        int dow = cal.get(Calendar.DAY_OF_WEEK);
+        int dow   = cal.get(Calendar.DAY_OF_WEEK);
         int delta = (dow == Calendar.SUNDAY) ? -6 : Calendar.MONDAY - dow;
         cal.add(Calendar.DAY_OF_MONTH, delta);
         return new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(cal.getTime());

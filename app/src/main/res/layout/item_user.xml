@@ -1,5 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- app/src/main/res/layout/item_user.xml -->
 <com.google.android.material.card.MaterialCardView
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -82,21 +81,33 @@
                 android:textStyle="bold"/>
         </LinearLayout>
 
-        <!-- Action buttons -->
+        <!-- Action buttons — Edit, Reset Password, Activate/Deactivate -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
             android:gravity="end">
 
+            <!-- EDIT button (new) -->
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnEditUser"
+                style="@style/Widget.Material3.Button.OutlinedButton"
+                android:layout_width="wrap_content"
+                android:layout_height="36dp"
+                android:text="Edit"
+                android:textSize="11sp"
+                android:layout_marginEnd="6dp"
+                app:strokeColor="@color/color_still_in"
+                android:textColor="@color/color_still_in"/>
+
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/btnResetPassword"
                 style="@style/Widget.Material3.Button.OutlinedButton"
                 android:layout_width="wrap_content"
                 android:layout_height="36dp"
-                android:text="Reset Password"
+                android:text="Reset PW"
                 android:textSize="11sp"
-                android:layout_marginEnd="8dp"
+                android:layout_marginEnd="6dp"
                 app:strokeColor="@color/chowking_red"
                 android:textColor="@color/chowking_red"/>
 

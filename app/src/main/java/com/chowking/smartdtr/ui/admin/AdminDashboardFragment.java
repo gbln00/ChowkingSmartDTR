@@ -52,8 +52,12 @@ public class AdminDashboardFragment extends Fragment {
         tvGreeting.setText("Welcome, " + session.getFullName());
 
         RecyclerView rv = view.findViewById(R.id.rvRecentUsers);
+        // Dashboard preview list — no edit/reset/deactivate needed
         recentAdapter = new UserAdapter(new ArrayList<>(),
-                user -> {}, user -> {});
+                user -> { /* no-op */ },
+                user -> { /* no-op */ }
+                // editListener omitted → Edit button hidden automatically
+        );
         rv.setLayoutManager(new LinearLayoutManager(requireContext()));
         rv.setAdapter(recentAdapter);
 

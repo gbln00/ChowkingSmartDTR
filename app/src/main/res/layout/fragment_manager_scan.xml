@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:gravity="center"
+    android:padding="32dp"
+    android:background="@color/surface_page">
+
+    <!-- Icon -->
+    <com.google.android.material.card.MaterialCardView
+        android:layout_width="88dp"
+        android:layout_height="88dp"
+        android:layout_marginBottom="24dp"
+        app:cardCornerRadius="44dp"
+        app:cardElevation="0dp"
+        app:cardBackgroundColor="@color/chowking_red_light">
+
+        <ImageView
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:layout_gravity="center"
+            android:src="@drawable/ic_nav_qr"
+            android:contentDescription="QR Scanner"
+            app:tint="@color/chowking_red"/>
+    </com.google.android.material.card.MaterialCardView>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Scan Crew Attendance"
+        android:textSize="22sp"
+        android:textStyle="bold"
+        android:textColor="?android:attr/textColorPrimary"
+        android:layout_marginBottom="8dp"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Point the camera at a crew member's QR code to clock them in or out"
+        android:textSize="14sp"
+        android:textColor="?android:attr/textColorSecondary"
+        android:gravity="center"
+        android:layout_marginBottom="12dp"/>
+
+    <!-- Last scanned employee -->
+    <TextView
+        android:id="@+id/tvLastScanned"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="13sp"
+        android:textColor="?android:attr/textColorSecondary"
+        android:gravity="center"
+        android:layout_marginBottom="8dp"
+        android:visibility="gone"/>
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btnScan"
+        android:layout_width="match_parent"
+        android:layout_height="56dp"
+        android:text="Open Scanner"
+        android:textSize="16sp"
+        app:backgroundTint="@color/chowking_red"
+        android:textColor="#FFFFFF"
+        app:cornerRadius="12dp"
+        app:icon="@drawable/ic_nav_qr"
+        app:iconTint="#FFFFFF"
+        app:iconGravity="textStart"
+        android:layout_marginBottom="16dp"/>
+
+    <TextView
+        android:id="@+id/tvScanResult"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="15sp"
+        android:textStyle="bold"
+        android:gravity="center"
+        android:padding="16dp"
+        android:background="@drawable/bg_result_card"
+        android:visibility="gone"/>
+
+</LinearLayout>

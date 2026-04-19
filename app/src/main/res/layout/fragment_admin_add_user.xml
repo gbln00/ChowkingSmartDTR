@@ -28,6 +28,16 @@
                 android:orientation="vertical"
                 android:padding="20dp">
 
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Add New User"
+                    android:textSize="16sp"
+                    android:textStyle="bold"
+                    android:textColor="?android:attr/textColorPrimary"
+                    android:layout_marginBottom="16dp"/>
+
+                <!-- Employee ID -->
                 <com.google.android.material.textfield.TextInputLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -41,6 +51,7 @@
                         android:inputType="text"/>
                 </com.google.android.material.textfield.TextInputLayout>
 
+                <!-- Full name -->
                 <com.google.android.material.textfield.TextInputLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -54,6 +65,7 @@
                         android:inputType="textPersonName"/>
                 </com.google.android.material.textfield.TextInputLayout>
 
+                <!-- Password -->
                 <com.google.android.material.textfield.TextInputLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -68,6 +80,7 @@
                         android:inputType="textPassword"/>
                 </com.google.android.material.textfield.TextInputLayout>
 
+                <!-- Position -->
                 <com.google.android.material.textfield.TextInputLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -81,12 +94,14 @@
                         android:inputType="text"/>
                 </com.google.android.material.textfield.TextInputLayout>
 
+                <!-- Rate + Role row -->
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal"
                     android:layout_marginBottom="16dp">
 
+                    <!-- Hourly Rate -->
                     <com.google.android.material.textfield.TextInputLayout
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
@@ -98,20 +113,27 @@
                             android:id="@+id/etNewRate"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:inputType="numberDecimal"/>
+                            android:inputType="numberDecimal"
+                            android:hint="76.25"/>
                     </com.google.android.material.textfield.TextInputLayout>
 
+                    <!--
+                        FIXED: Use ExposedDropdownMenu style so the role
+                        dropdown is actually tappable/clickable on all devices.
+                    -->
                     <com.google.android.material.textfield.TextInputLayout
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:hint="Role"
-                        style="@style/Widget.Material3.TextInputLayout.OutlinedBox.Dense">
+                        style="@style/Widget.Material3.TextInputLayout.OutlinedBox.ExposedDropdownMenu">
                         <AutoCompleteTextView
                             android:id="@+id/acNewRole"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:inputType="none"
+                            android:focusable="true"
+                            android:focusableInTouchMode="false"
                             android:text="CREW"/>
                     </com.google.android.material.textfield.TextInputLayout>
                 </LinearLayout>

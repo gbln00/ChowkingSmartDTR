@@ -63,9 +63,10 @@
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:textSize="15sp"
+                        android:textSize="14sp"
                         android:textStyle="bold"
-                        android:textColor="#FFFFFF"/>
+                        android:textColor="#FFFFFF"
+                        android:text="○ Not clocked in — show QR to clock in"/>
 
                     <TextView
                         android:id="@+id/tvTimer"
@@ -174,7 +175,7 @@
             </com.google.android.material.card.MaterialCardView>
         </LinearLayout>
 
-        <!-- QR code card -->
+        <!-- QR Code card — primary action area -->
         <com.google.android.material.card.MaterialCardView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -195,25 +196,36 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="My QR code"
-                    android:textSize="12sp"
+                    android:text="My QR Code"
+                    android:textSize="13sp"
                     android:textStyle="bold"
-                    android:textColor="?android:attr/textColorSecondary"
-                    android:layout_marginBottom="12dp"/>
+                    android:textColor="?android:attr/textColorPrimary"
+                    android:layout_marginBottom="4dp"/>
 
-                <ImageView
-                    android:id="@+id/ivQrCode"
-                    android:layout_width="200dp"
-                    android:layout_height="200dp"
-                    android:contentDescription="Employee QR code"
-                    android:scaleType="fitCenter"
-                    android:background="@android:color/white"
-                    android:padding="6dp"/>
-
+                <!-- HOW-TO instruction -->
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Show to manager to log attendance"
+                    android:text="Show this to the manager to clock in or out"
+                    android:textSize="12sp"
+                    android:textColor="?android:attr/textColorSecondary"
+                    android:gravity="center"
+                    android:layout_marginBottom="14dp"/>
+
+                <ImageView
+                    android:id="@+id/ivQrCode"
+                    android:layout_width="220dp"
+                    android:layout_height="220dp"
+                    android:contentDescription="Employee QR code"
+                    android:scaleType="fitCenter"
+                    android:background="@android:color/white"
+                    android:padding="8dp"/>
+
+                <!-- Tip below QR -->
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="The manager scans this code on their device"
                     android:textSize="11sp"
                     android:textColor="?android:attr/textColorSecondary"
                     android:gravity="center"
@@ -221,7 +233,7 @@
             </LinearLayout>
         </com.google.android.material.card.MaterialCardView>
 
-        <!-- Recent records -->
+        <!-- Recent records section -->
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

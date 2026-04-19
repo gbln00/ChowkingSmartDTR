@@ -5,7 +5,9 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AlertDialog;
@@ -24,7 +26,6 @@ import com.chowking.smartdtr.utils.HashUtils;
 import com.chowking.smartdtr.utils.SessionManager;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.textfield.TextInputEditText;
-import com.google.android.material.textfield.TextInputLayout;
 
 import java.util.ArrayList;
 import java.util.concurrent.Executors;
@@ -41,7 +42,6 @@ public class AdminHomeActivity extends AppCompatActivity {
 
         EdgeToEdgeHelper.applyInsets(findViewById(R.id.rootLayout));
 
-        // Toolbar
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         if (getSupportActionBar() != null) {
@@ -59,17 +59,25 @@ public class AdminHomeActivity extends AppCompatActivity {
         AutoCompleteTextView acRole  = findViewById(R.id.acNewRole);
         TextView tvResult            = findViewById(R.id.tvAddResult);
 
-        // Role dropdown
+        // ── Role dropdown fix ──────────────────────────────────────────────
         String[] roles = {"CREW", "MANAGER", "ADMIN"};
         ArrayAdapter<String> roleAdapter = new ArrayAdapter<>(
-                this, android.R.layout.simple_dropdown_item_1line, roles
-        );
+                this, android.R.layout.simple_dropdown_item_1line, roles);
         acRole.setAdapter(roleAdapter);
-        acRole.setText("CREW", false); // default
+        acRole.setText("CREW", false);
+        acRole.setOnClickListener(v -> acRole.showDropDown());
+        acRole.setOnFocusChangeListener((v, hasFocus) -> {
+            if (hasFocus) acRole.showDropDown();
+        });
 
         // ── User list RecyclerView ─────────────────────────────────────────
         RecyclerView rvUsers = findViewById(R.id.rvUsers);
-        userAdapter = new UserAdapter(new ArrayList<>(), this::onResetPassword, this::onDeactivateUser);
+        userAdapter = new UserAdapter(
+                new ArrayList<>(),
+                this::onResetPassword,
+                this::onDeactivateUser,
+                this::onEditUser           // ← edit support
+        );
         rvUsers.setLayoutManager(new LinearLayoutManager(this));
         rvUsers.setAdapter(userAdapter);
         refreshUserList();
@@ -91,14 +99,13 @@ public class AdminHomeActivity extends AppCompatActivity {
                 return;
             }
 
-            float rate = 76.25f; // Region 10 minimum wage default
+            float rate = 76.25f;
             try {
                 if (!rateStr.isEmpty()) rate = Float.parseFloat(rateStr);
             } catch (NumberFormatException ignored) {}
 
             final float finalRate = rate;
             Executors.newSingleThreadExecutor().execute(() -> {
-                // Check for duplicate employee ID
                 User existing = AppDatabase.getInstance(this)
                         .userDao().getUserByEmployeeId(id);
                 if (existing != null) {
@@ -147,8 +154,79 @@ public class AdminHomeActivity extends AppCompatActivity {
         });
     }
 
+    // ── Edit User ──────────────────────────────────────────────────────────
+
+    private void onEditUser(User user) {
+        LinearLayout layout = new LinearLayout(this);
+        layout.setOrientation(LinearLayout.VERTICAL);
+        layout.setPadding(48, 24, 48, 8);
+
+        android.widget.EditText etName = makeEditText("Full Name", user.fullName,
+                android.text.InputType.TYPE_CLASS_TEXT
+                        | android.text.InputType.TYPE_TEXT_FLAG_CAP_WORDS);
+        android.widget.EditText etPos  = makeEditText("Position",
+                user.position != null ? user.position : "",
+                android.text.InputType.TYPE_CLASS_TEXT);
+        android.widget.EditText etRate = makeEditText("Hourly Rate (₱/hr)",
+                String.valueOf(user.hourlyRate),
+                android.text.InputType.TYPE_CLASS_NUMBER
+                        | android.text.InputType.TYPE_NUMBER_FLAG_DECIMAL);
+
+        AutoCompleteTextView acRole = new AutoCompleteTextView(this);
+        acRole.setInputType(android.text.InputType.TYPE_NULL);
+        String[] roles = {"CREW", "MANAGER", "ADMIN"};
+        acRole.setAdapter(new ArrayAdapter<>(this,
+                android.R.layout.simple_dropdown_item_1line, roles));
+        acRole.setText(user.role, false);
+        acRole.setOnClickListener(v -> acRole.showDropDown());
+        acRole.setHint("Role");
+        acRole.setPadding(0, 16, 0, 16);
+
+        layout.addView(etName);
+        layout.addView(etPos);
+        layout.addView(etRate);
+        layout.addView(acRole);
+
+        new AlertDialog.Builder(this)
+                .setTitle("Edit — " + user.fullName)
+                .setView(layout)
+                .setPositiveButton("Save", (d, w) -> {
+                    String newName = etName.getText().toString().trim();
+                    String newPos  = etPos.getText().toString().trim();
+                    String newRole = acRole.getText().toString().trim();
+                    String rateStr = etRate.getText().toString().trim();
+
+                    if (newName.isEmpty()) {
+                        Toast.makeText(this, "Name cannot be empty.", Toast.LENGTH_SHORT).show();
+                        return;
+                    }
+
+                    float newRate = user.hourlyRate;
+                    try { if (!rateStr.isEmpty()) newRate = Float.parseFloat(rateStr); }
+                    catch (NumberFormatException ignored) {}
+
+                    user.fullName   = newName;
+                    user.position   = newPos.isEmpty() ? user.position : newPos;
+                    user.role       = newRole.isEmpty() ? user.role : newRole;
+                    user.hourlyRate = newRate;
+
+                    Executors.newSingleThreadExecutor().execute(() -> {
+                        AppDatabase.getInstance(this).userDao().updateUser(user);
+                        runOnUiThread(() -> {
+                            Toast.makeText(this,
+                                    "✓ " + user.fullName + " updated.",
+                                    Toast.LENGTH_SHORT).show();
+                            refreshUserList();
+                        });
+                    });
+                })
+                .setNegativeButton("Cancel", null)
+                .show();
+    }
+
+    // ── Reset Password ─────────────────────────────────────────────────────
+
     private void onResetPassword(User user) {
-        // Show a simple dialog to enter a new password
         android.widget.EditText input = new android.widget.EditText(this);
         input.setHint("New password");
         input.setInputType(android.text.InputType.TYPE_CLASS_TEXT
@@ -165,16 +243,17 @@ public class AdminHomeActivity extends AppCompatActivity {
                         String hash = HashUtils.hashPassword(newPass);
                         AppDatabase.getInstance(this).userDao()
                                 .updatePassword(user.id, hash);
-                        runOnUiThread(() -> {
-                            android.widget.Toast.makeText(this,
-                                    "Password reset for " + user.fullName,
-                                    android.widget.Toast.LENGTH_SHORT).show();
-                        });
+                        runOnUiThread(() ->
+                                Toast.makeText(this,
+                                        "Password reset for " + user.fullName,
+                                        Toast.LENGTH_SHORT).show());
                     });
                 })
                 .setNegativeButton("Cancel", null)
                 .show();
     }
+
+    // ── Deactivate / Reactivate ────────────────────────────────────────────
 
     private void onDeactivateUser(User user) {
         String action = user.isActive == 1 ? "deactivate" : "reactivate";
@@ -193,6 +272,17 @@ public class AdminHomeActivity extends AppCompatActivity {
                 })
                 .setNegativeButton("Cancel", null)
                 .show();
+    }
+
+    // ── Helpers ────────────────────────────────────────────────────────────
+
+    private android.widget.EditText makeEditText(String hint, String value, int inputType) {
+        android.widget.EditText et = new android.widget.EditText(this);
+        et.setHint(hint);
+        et.setText(value);
+        et.setInputType(inputType);
+        et.setPadding(0, 8, 0, 24);
+        return et;
     }
 
     private String getText(TextInputEditText et) {

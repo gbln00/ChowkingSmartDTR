@@ -2,22 +2,27 @@ package com.chowking.smartdtr.ui.crew;
 
 import android.content.Intent;
 import android.os.Bundle;
-
-import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.TextView;
 
-import androidx.annotation.NonNull;
+import androidx.appcompat.app.ActionBarDrawerToggle;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.core.view.GravityCompat;
+import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
 
 import com.chowking.smartdtr.R;
 import com.chowking.smartdtr.ui.LoginActivity;
 import com.chowking.smartdtr.utils.SessionManager;
-import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.android.material.navigation.NavigationView;
 
-public class CrewHostActivity extends AppCompatActivity {
+public class CrewHostActivity extends AppCompatActivity
+        implements NavigationView.OnNavigationItemSelectedListener {
 
+    private DrawerLayout drawerLayout;
     private SessionManager session;
 
     @Override
@@ -30,43 +35,45 @@ public class CrewHostActivity extends AppCompatActivity {
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        BottomNavigationView bottomNav = findViewById(R.id.bottomNav);
+        drawerLayout = findViewById(R.id.drawerLayout);
+        NavigationView navView = findViewById(R.id.navView);
 
-        // Default fragment
+        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
+                this, drawerLayout, toolbar,
+                R.string.nav_open, R.string.nav_close);
+        drawerLayout.addDrawerListener(toggle);
+        toggle.syncState();
+        toggle.getDrawerArrowDrawable().setColor(0xFFFFFFFF);
+
+        navView.setNavigationItemSelectedListener(this);
+
+        // Populate drawer header with session data
+        View header = navView.getHeaderView(0);
+        TextView tvName = header.findViewById(R.id.tvDrawerName);
+        TextView tvRole = header.findViewById(R.id.tvDrawerRole);
+        tvName.setText(session.getFullName());
+        tvRole.setText("Service Crew");
+
+        // Default screen
         if (savedInstanceState == null) {
             loadFragment(new CrewDashboardFragment(), "Home");
-            bottomNav.setSelectedItemId(R.id.nav_crew_home);
+            navView.setCheckedItem(R.id.nav_crew_home);
         }
-
-        bottomNav.setOnItemSelectedListener(item -> {
-            int id = item.getItemId();
-            if (id == R.id.nav_crew_home) {
-                loadFragment(new CrewDashboardFragment(), "Home");
-                return true;
-            } else if (id == R.id.nav_crew_scan) {
-                loadFragment(new CrewScanFragment(), "Scan QR");
-                return true;
-            } else if (id == R.id.nav_crew_history) {
-                loadFragment(new CrewHistoryFragment(), "My history");
-                return true;
-            }
-            return false;
-        });
     }
 
     @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu_crew_toolbar, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        if (item.getItemId() == R.id.action_logout) {
-            logout();
+    public boolean onNavigationItemSelected(MenuItem item) {
+        int id = item.getItemId();
+        if (id == R.id.nav_crew_home) {
+            loadFragment(new CrewDashboardFragment(), "Home");
+        } else if (id == R.id.nav_crew_history) {
+            loadFragment(new CrewHistoryFragment(), "My History");
+        } else if (id == R.id.nav_logout) {
+            confirmLogout();
             return true;
         }
-        return super.onOptionsItemSelected(item);
+        drawerLayout.closeDrawer(GravityCompat.START);
+        return true;
     }
 
     private void loadFragment(Fragment fragment, String title) {
@@ -77,9 +84,25 @@ public class CrewHostActivity extends AppCompatActivity {
                 .commit();
     }
 
-    public void logout() {
-        session.logout();
-        startActivity(new Intent(this, LoginActivity.class));
-        finish();
+    private void confirmLogout() {
+        new AlertDialog.Builder(this)
+                .setTitle("Log out")
+                .setMessage("Are you sure you want to log out?")
+                .setPositiveButton("Log out", (d, w) -> {
+                    session.logout();
+                    startActivity(new Intent(this, LoginActivity.class));
+                    finish();
+                })
+                .setNegativeButton("Cancel", null)
+                .show();
+    }
+
+    @Override
+    public void onBackPressed() {
+        if (drawerLayout.isDrawerOpen(GravityCompat.START)) {
+            drawerLayout.closeDrawer(GravityCompat.START);
+        } else {
+            super.onBackPressed();
+        }
     }
 }
