@@ -2,4 +2,9 @@
 <resources>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
+    <color name="chowking_red">#EE2D24</color>
+    <color name="chowking_red_dark">#C41E17</color>
+    <color name="color_overtime">#4CAF50</color>
+    <color name="color_present">#4CAF50</color>
+    <color name="color_absent">#F44336</color>
 </resources>
