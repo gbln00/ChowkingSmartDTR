@@ -14,6 +14,8 @@ import androidx.fragment.app.Fragment;
 import com.chowking.smartdtr.R;
 import com.chowking.smartdtr.database.AppDatabase;
 import com.chowking.smartdtr.model.AttendanceRecord;
+import androidx.lifecycle.ViewModelProvider;
+import com.chowking.smartdtr.viewmodel.AttendanceViewModel;
 import com.github.mikephil.charting.charts.BarChart;
 import com.github.mikephil.charting.charts.PieChart;
 import com.github.mikephil.charting.components.XAxis;
@@ -36,6 +38,7 @@ import java.util.concurrent.Executors;
 
 public class ManagerDashboardFragment extends Fragment {
 
+    private AttendanceViewModel viewModel;
     private TextView tvGreeting, tvDate, tvStatPresent, tvStatStillIn, tvStatTotalHours;
     private BarChart barChart;
     private PieChart pieChart;
@@ -52,6 +55,7 @@ public class ManagerDashboardFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+        viewModel        = new ViewModelProvider(requireActivity()).get(AttendanceViewModel.class);
         tvGreeting       = view.findViewById(R.id.tvManagerGreeting);
         tvDate           = view.findViewById(R.id.tvManagerDate);
         tvStatPresent    = view.findViewById(R.id.tvStatPresent);
@@ -66,51 +70,60 @@ public class ManagerDashboardFragment extends Fragment {
 
         setupBarChart();
         setupPieChart();
-        loadData();
+        observeData();
     }
 
-    private void loadData() {
-        String today     = dateStr(new Date());
-        String weekStart = weekStartStr();
+    private void observeData() {
+        String today = dateStr(new Date());
+        viewModel.getRecordsByDate(today).observe(getViewLifecycleOwner(), records -> {
+            if (records != null) {
+                updateTodayStats(records);
+            }
+        });
 
+        // Weekly chart data still requires some manual calculation but we trigger it when data changes
+        loadWeeklyStats();
+    }
+
+    private void updateTodayStats(List<AttendanceRecord> todayRecords) {
+        int present = 0, stillIn = 0;
+        float totalHours = 0;
+        for (AttendanceRecord r : todayRecords) {
+            if (r.timeOut > 0) {
+                present++;
+                totalHours += r.totalHours;
+            } else {
+                stillIn++;
+            }
+        }
+
+        tvStatPresent.setText(String.valueOf(present));
+        tvStatStillIn.setText(String.valueOf(stillIn));
+        tvStatTotalHours.setText(String.format(Locale.getDefault(), "%.1f", totalHours));
+
+        updatePieChart(present, stillIn);
+    }
+
+    private void loadWeeklyStats() {
         Executors.newSingleThreadExecutor().execute(() -> {
             AppDatabase db = AppDatabase.getInstance(requireContext());
-
-            // Today's stats
-            List<AttendanceRecord> todayRecords = db.attendanceDao().getRecordsByDate(today);
-            int present = 0, stillIn = 0;
-            float totalHours = 0;
-            for (AttendanceRecord r : todayRecords) {
-                if (r.timeOut > 0) { present++; totalHours += r.totalHours; }
-                else stillIn++;
-            }
-
-            // Weekly bar data (Mon–Sun)
             float[] weeklyHours = new float[7];
             Calendar cal = Calendar.getInstance();
             int dow = cal.get(Calendar.DAY_OF_WEEK);
             int delta = (dow == Calendar.SUNDAY) ? -6 : Calendar.MONDAY - dow;
-            cal.add(Calendar.DAY_OF_MONTH, delta);
+            cal.set(Calendar.DAY_OF_WEEK, Calendar.MONDAY); // Explicitly set to Monday
+
             for (int i = 0; i < 7; i++) {
                 String d = dateStr(cal.getTime());
-                List<AttendanceRecord> dayRecs = db.attendanceDao().getRecordsByDate(d);
+                // Using DAO directly for synchronous aggregation in background thread
+                List<AttendanceRecord> dayRecs = db.attendanceDao().getRecordsByDateSync(d);
                 for (AttendanceRecord r : dayRecs) weeklyHours[i] += r.totalHours;
                 cal.add(Calendar.DAY_OF_MONTH, 1);
             }
 
-            int finalPresent  = present;
-            int finalStillIn  = stillIn;
-            float finalHours  = totalHours;
-
-            requireActivity().runOnUiThread(() -> {
-                if (!isAdded()) return;
-                tvStatPresent.setText(String.valueOf(finalPresent));
-                tvStatStillIn.setText(String.valueOf(finalStillIn));
-                tvStatTotalHours.setText(String.format(Locale.getDefault(), "%.1f", finalHours));
-
-                updateBarChart(weeklyHours);
-                updatePieChart(finalPresent, finalStillIn);
-            });
+            if (isAdded()) {
+                requireActivity().runOnUiThread(() -> updateBarChart(weeklyHours));
+            }
         });
     }
 

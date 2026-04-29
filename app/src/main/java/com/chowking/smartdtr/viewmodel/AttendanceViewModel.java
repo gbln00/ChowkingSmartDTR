@@ -21,6 +21,14 @@ public class AttendanceViewModel extends AndroidViewModel {
         return repository.recordAttendance(employeeId);
     }
 
+    public LiveData<List<AttendanceRecord>> getRecordsByEmployee(String id) {
+        return repository.getRecordsByEmployee(id);
+    }
+
+    public LiveData<AttendanceRecord> getOpenRecord(String id, String date) {
+        return repository.getOpenRecord(id, date);
+    }
+
     public LiveData<List<AttendanceRecord>> getRecordsByDate(String date) {
         return repository.getRecordsByDate(date);
     }

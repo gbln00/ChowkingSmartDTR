@@ -3,25 +3,16 @@
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
 
-    <color name="chowking_red">#FF4D42</color>
-    <color name="chowking_red_dark">#EE2D24</color>
-    <color name="chowking_red_light">#3D1B1B</color>
-
-    <color name="color_overtime">#FFB74D</color>
-    <color name="color_overtime_bg">#2D2418</color>
-    <color name="color_present">#81C784</color>
-    <color name="color_present_bg">#1B2D1B</color>
-    <color name="color_absent">#E57373</color>
-    <color name="color_absent_bg">#2D1B1B</color>
-    <color name="color_still_in">#64B5F6</color>
-    <color name="color_still_in_bg">#1B242D</color>
-
-    <color name="nav_selected">#FF4D42</color>
-    <color name="nav_unselected">#B0B0B0</color>
+    <color name="chowking_red">#FF4D4D</color>
+    <color name="chowking_red_dark">#D32F2F</color>
+    <color name="chowking_red_light">#311B1B</color>
 
     <color name="surface_card">#1E1E1E</color>
     <color name="surface_page">#121212</color>
 
     <color name="text_primary">#E1E1E1</color>
     <color name="text_secondary">#AAAAAA</color>
+
+    <color name="divider">#333333</color>
+    <color name="shimmer_base">#2C2C2C</color>
 </resources>

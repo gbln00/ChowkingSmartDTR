@@ -44,7 +44,7 @@ public class CrewHistoryActivity extends AppCompatActivity {
         Executors.newSingleThreadExecutor().execute(() -> {
             List<AttendanceRecord> records = AppDatabase.getInstance(this)
                     .attendanceDao()
-                    .getRecordsByEmployee(session.getEmployeeId());
+                    .getRecordsByEmployeeSync(session.getEmployeeId());
 
             runOnUiThread(() -> {
                 if (records.isEmpty()) {

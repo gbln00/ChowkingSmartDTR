@@ -42,7 +42,7 @@ public class PayrollRepository {
 
             for (User user : crew) {
                 List<AttendanceRecord> records =
-                        attendanceDao.getRecordsByEmployeeAndDateRange(
+                        attendanceDao.getRecordsByEmployeeAndDateRangeSync(
                                 user.employeeId, from, to);
                 PayrollEntry entry =
                         PayrollCalculator.compute(user, records, from, to);

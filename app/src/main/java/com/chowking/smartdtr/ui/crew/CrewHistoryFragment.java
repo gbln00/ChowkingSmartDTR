@@ -50,7 +50,7 @@ public class CrewHistoryFragment extends Fragment {
         Executors.newSingleThreadExecutor().execute(() -> {
             List<AttendanceRecord> records = AppDatabase.getInstance(requireContext())
                     .attendanceDao()
-                    .getRecordsByEmployee(session.getEmployeeId());
+                    .getRecordsByEmployeeSync(session.getEmployeeId());
 
             requireActivity().runOnUiThread(() -> {
                 if (records.isEmpty()) {

@@ -22,9 +22,11 @@ import com.chowking.smartdtr.model.PayrollEntry;
 import com.chowking.smartdtr.utils.PayslipPdfUtils;
 import com.chowking.smartdtr.utils.SessionManager;
 import com.chowking.smartdtr.viewmodel.PayrollViewModel;
+import com.chowking.smartdtr.utils.pdf.PdfGenerator;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.chip.Chip;
 
+import java.io.File;
 import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.List;
@@ -159,10 +161,22 @@ public class CrewPayslipFragment extends Fragment {
         MaterialButton btnShare = dialogView.findViewById(R.id.btnSharePayslip);
         btnShare.setOnClickListener(v -> sharePayslip(entry));
 
+        MaterialButton btnDownload = dialogView.findViewById(R.id.btnDownloadPdf);
+        btnDownload.setOnClickListener(v -> downloadPdf(entry));
+
         new AlertDialog.Builder(requireContext())
                 .setView(dialogView)
                 .setPositiveButton("Close", null)
                 .show();
+    }
+
+    private void downloadPdf(PayrollEntry entry) {
+        File file = PdfGenerator.generatePayslipPdf(requireContext(), entry, session.getFullName());
+        if (file != null) {
+            Toast.makeText(requireContext(), "PDF saved to Downloads: " + file.getName(), Toast.LENGTH_LONG).show();
+        } else {
+            Toast.makeText(requireContext(), "Failed to generate PDF", Toast.LENGTH_SHORT).show();
+        }
     }
 
     private void sharePayslip(PayrollEntry entry) {

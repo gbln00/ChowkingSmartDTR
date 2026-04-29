@@ -26,4 +26,5 @@
     <color name="text_secondary">#757575</color>
 
     <color name="divider">#EEEEEE</color>
+    <color name="shimmer_base">#E0E0E0</color>
 </resources>

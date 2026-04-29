@@ -33,7 +33,7 @@ public class AttendanceRepository {
                 ).format(new Date());
 
                 AttendanceRecord open =
-                        attendanceDao.getOpenRecord(employeeId, today);
+                        attendanceDao.getOpenRecordSync(employeeId, today);
 
                 if (open == null) {
                     // No open record — TIME IN
@@ -61,11 +61,23 @@ public class AttendanceRepository {
         return result;
     }
 
+    public LiveData<List<AttendanceRecord>> getRecordsByEmployee(String id) {
+        return attendanceDao.getRecordsByEmployee(id);
+    }
+
+    public LiveData<AttendanceRecord> getOpenRecord(String id, String date) {
+        return attendanceDao.getOpenRecord(id, date);
+    }
+
     public LiveData<List<AttendanceRecord>> getRecordsByDate(String date) {
-        MutableLiveData<List<AttendanceRecord>> result = new MutableLiveData<>();
-        executor.execute(() ->
-                result.postValue(attendanceDao.getRecordsByDate(date))
-        );
-        return result;
+        return attendanceDao.getRecordsByDate(date);
+    }
+
+    public float getTotalHoursByEmployee(String id, String start, String end) {
+        return attendanceDao.getTotalHoursByEmployee(id, start, end);
+    }
+
+    public int getDaysWorkedByEmployee(String id, String start, String end) {
+        return attendanceDao.getDaysWorkedByEmployee(id, start, end);
     }
 }

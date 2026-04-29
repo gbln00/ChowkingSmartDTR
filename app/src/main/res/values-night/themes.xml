@@ -1,13 +1,12 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
-    <!-- Base application theme. -->
     <style name="Base.Theme.ChowkingSmartDTR" parent="Theme.Material3.DayNight.NoActionBar">
         <item name="colorPrimary">@color/chowking_red</item>
-        <item name="colorPrimaryDark">@color/black</item>
+        <item name="colorPrimaryDark">@color/chowking_red_dark</item>
         <item name="colorOnPrimary">@color/white</item>
         <item name="colorSurface">@color/surface_card</item>
         <item name="android:windowBackground">@color/surface_page</item>
         <item name="android:statusBarColor">@color/black</item>
         <item name="android:navigationBarColor">@color/surface_page</item>
-        <item name="android:windowLightStatusBar">false</item>
+        <item name="android:windowLightStatusBar" tools:targetApi="m">false</item>
     </style>
 </resources>
