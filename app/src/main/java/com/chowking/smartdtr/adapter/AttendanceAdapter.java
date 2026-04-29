@@ -52,37 +52,38 @@ public class AttendanceAdapter extends
     @Override
     public void onBindViewHolder(@NonNull ViewHolder h, int position) {
         AttendanceRecord rec = records.get(position);
-        SimpleDateFormat timeFmt =
-                new SimpleDateFormat("hh:mm a", Locale.getDefault());
+        SimpleDateFormat timeFmt = new SimpleDateFormat("hh:mm a", Locale.getDefault());
 
         h.tvEmployeeId.setText(rec.employeeId);
         h.tvDate.setText(rec.date);
-        h.tvTimeIn.setText("In:  " + timeFmt.format(new Date(rec.timeIn)));
+        h.tvTimeIn.setText(timeFmt.format(new Date(rec.timeIn)));
 
         if (rec.timeOut == 0) {
-            h.tvTimeOut.setText("Out: --");
-            h.tvTotalHours.setText("Still clocked in");
-            h.chipStatus.setText("IN");
+            h.tvTimeOut.setText("--:--");
+            h.tvTotalHours.setText("Ongoing");
+            h.tvTotalHours.setTextColor(h.itemView.getContext().getColor(R.color.color_still_in));
+            
+            h.chipStatus.setText("ACTIVE");
             h.chipStatus.setChipBackgroundColorResource(R.color.color_still_in);
-            h.chipStatus.setTextColor(0xFFFFFFFF);
         } else {
-            h.tvTimeOut.setText("Out: " + timeFmt.format(new Date(rec.timeOut)));
-            h.tvTotalHours.setText(
-                    String.format(Locale.getDefault(), "%.2f hrs", rec.totalHours)
-            );
+            h.tvTimeOut.setText(timeFmt.format(new Date(rec.timeOut)));
+            h.tvTotalHours.setText(String.format(Locale.getDefault(), "%.2f hrs", rec.totalHours));
+            h.tvTotalHours.setTextColor(h.itemView.getContext().getColor(R.color.chowking_red));
 
             if (rec.totalHours > 8) {
-                h.chipStatus.setText("OT");
+                h.chipStatus.setText("OVERTIME");
                 h.chipStatus.setChipBackgroundColorResource(R.color.color_overtime);
-                h.chipStatus.setTextColor(0xFFFFFFFF);
             } else {
-                h.chipStatus.setText("DONE");
+                h.chipStatus.setText("COMPLETED");
                 h.chipStatus.setChipBackgroundColorResource(R.color.color_present);
-                h.chipStatus.setTextColor(0xFFFFFFFF);
             }
         }
 
-        // Long-press to edit (used by manager)
+        // Add visual indicators for holidays if applicable
+        if (rec.isHoliday == 1 || rec.isSpecialHoliday == 1) {
+             h.tvDate.setText(rec.date + " (Holiday)");
+        }
+
         if (longClickListener != null) {
             h.itemView.setOnLongClickListener(v -> {
                 longClickListener.onLongClick(rec);

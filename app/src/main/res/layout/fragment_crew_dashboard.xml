@@ -26,8 +26,8 @@
             <com.google.android.material.card.MaterialCardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="12dp"
-                app:cardCornerRadius="16dp"
+                android:layout_marginBottom="16dp"
+                app:cardCornerRadius="24dp"
                 app:cardElevation="0dp"
                 app:strokeWidth="0dp"
                 app:cardBackgroundColor="@color/chowking_red">
@@ -36,30 +36,31 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
-                    android:padding="20dp">
+                    android:padding="24dp">
 
                     <TextView
                         android:id="@+id/tvWelcome"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:textSize="20sp"
+                        android:textSize="22sp"
                         android:textStyle="bold"
-                        android:textColor="#FFFFFF"/>
+                        android:textColor="#FFFFFF"
+                        android:letterSpacing="-0.01"/>
 
                     <TextView
                         android:id="@+id/tvDate"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:textSize="13sp"
-                        android:textColor="#FFCDD2"
-                        android:layout_marginTop="2dp"/>
+                        android:textSize="14sp"
+                        android:textColor="#E0E0E0"
+                        android:layout_marginTop="4dp"/>
 
                     <View
                         android:layout_width="match_parent"
                         android:layout_height="1dp"
-                        android:background="#33FFFFFF"
-                        android:layout_marginTop="14dp"
-                        android:layout_marginBottom="14dp"/>
+                        android:background="#22FFFFFF"
+                        android:layout_marginTop="20dp"
+                        android:layout_marginBottom="20dp"/>
 
                     <LinearLayout
                         android:layout_width="match_parent"
@@ -75,13 +76,14 @@
                             android:textSize="14sp"
                             android:textStyle="bold"
                             android:textColor="#FFFFFF"
-                            android:text="○ Not clocked in — show QR to clock in"/>
+                            android:text="@string/crew_not_clocked_in"
+                            android:alpha="0.9"/>
 
                         <TextView
                             android:id="@+id/tvTimer"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:textSize="26sp"
+                            android:textSize="28sp"
                             android:textStyle="bold"
                             android:fontFamily="monospace"
                             android:textColor="#FFFFFF"
@@ -95,48 +97,51 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
-                android:layout_marginBottom="12dp">
+                android:layout_marginBottom="16dp">
 
                 <com.google.android.material.card.MaterialCardView
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:layout_marginEnd="6dp"
-                    app:cardCornerRadius="12dp"
+                    android:layout_marginEnd="8dp"
+                    app:cardCornerRadius="20dp"
                     app:cardElevation="0dp"
-                    app:strokeWidth="0.5dp"
-                    app:strokeColor="?attr/colorOutline"
+                    app:strokeWidth="1dp"
+                    app:strokeColor="@color/surface_variant"
                     app:cardBackgroundColor="@color/surface_card">
 
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:orientation="vertical"
-                        android:padding="14dp">
+                        android:padding="16dp">
 
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="This week"
+                            android:text="@string/this_week"
                             android:textSize="11sp"
-                            android:textColor="?android:attr/textColorSecondary"/>
+                            android:textStyle="bold"
+                            android:textAllCaps="true"
+                            android:letterSpacing="0.05"
+                            android:textColor="@color/text_tertiary"/>
 
                         <TextView
                             android:id="@+id/tvWeekHours"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="0.0 hrs"
-                            android:textSize="22sp"
+                            android:text="0.0"
+                            android:textSize="28sp"
                             android:textStyle="bold"
-                            android:textColor="@color/chowking_red"
-                            android:layout_marginTop="2dp"/>
+                            android:textColor="@color/text_primary"
+                            android:layout_marginTop="4dp"/>
 
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="Hours worked"
-                            android:textSize="11sp"
-                            android:textColor="?android:attr/textColorSecondary"/>
+                            android:text="@string/hours_worked"
+                            android:textSize="12sp"
+                            android:textColor="@color/text_secondary"/>
                     </LinearLayout>
                 </com.google.android.material.card.MaterialCardView>
 
@@ -144,42 +149,45 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:layout_marginStart="6dp"
-                    app:cardCornerRadius="12dp"
+                    android:layout_marginStart="8dp"
+                    app:cardCornerRadius="20dp"
                     app:cardElevation="0dp"
-                    app:strokeWidth="0.5dp"
-                    app:strokeColor="?attr/colorOutline"
+                    app:strokeWidth="1dp"
+                    app:strokeColor="@color/surface_variant"
                     app:cardBackgroundColor="@color/surface_card">
 
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:orientation="vertical"
-                        android:padding="14dp">
+                        android:padding="16dp">
 
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="Est. earnings"
+                            android:text="@string/est_earnings"
                             android:textSize="11sp"
-                            android:textColor="?android:attr/textColorSecondary"/>
+                            android:textStyle="bold"
+                            android:textAllCaps="true"
+                            android:letterSpacing="0.05"
+                            android:textColor="@color/text_tertiary"/>
 
                         <TextView
                             android:id="@+id/tvWeekPay"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="₱0.00"
-                            android:textSize="22sp"
+                            android:textSize="28sp"
                             android:textStyle="bold"
                             android:textColor="@color/color_present"
-                            android:layout_marginTop="2dp"/>
+                            android:layout_marginTop="4dp"/>
 
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="This week"
-                            android:textSize="11sp"
-                            android:textColor="?android:attr/textColorSecondary"/>
+                            android:text="@string/this_week"
+                            android:textSize="12sp"
+                            android:textColor="@color/text_secondary"/>
                     </LinearLayout>
                 </com.google.android.material.card.MaterialCardView>
             </LinearLayout>
@@ -188,57 +196,65 @@
             <com.google.android.material.card.MaterialCardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="12dp"
-                app:cardCornerRadius="12dp"
+                android:layout_marginBottom="16dp"
+                app:cardCornerRadius="24dp"
                 app:cardElevation="0dp"
-                app:strokeWidth="0.5dp"
-                app:strokeColor="?attr/colorOutline"
+                app:strokeWidth="1dp"
+                app:strokeColor="@color/surface_variant"
                 app:cardBackgroundColor="@color/surface_card">
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
-                    android:padding="16dp"
+                    android:padding="24dp"
                     android:gravity="center">
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="My QR Code"
-                        android:textSize="13sp"
+                        android:text="@string/my_qr_code"
+                        android:textSize="16sp"
                         android:textStyle="bold"
-                        android:textColor="?android:attr/textColorPrimary"
+                        android:textColor="@color/text_primary"
                         android:layout_marginBottom="4dp"/>
 
                     <!-- HOW-TO instruction -->
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Show this to the manager to clock in or out"
-                        android:textSize="12sp"
-                        android:textColor="?android:attr/textColorSecondary"
+                        android:text="@string/qr_instruction"
+                        android:textSize="13sp"
+                        android:textColor="@color/text_secondary"
                         android:gravity="center"
-                        android:layout_marginBottom="14dp"/>
+                        android:layout_marginBottom="20dp"/>
 
-                    <ImageView
-                        android:id="@+id/ivQrCode"
-                        android:layout_width="200dp"
-                        android:layout_height="200dp"
-                        android:contentDescription="Employee QR code"
-                        android:scaleType="fitCenter"
-                        android:background="@android:color/white"
-                        android:padding="8dp"/>
+                    <com.google.android.material.card.MaterialCardView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        app:cardCornerRadius="16dp"
+                        app:cardElevation="0dp"
+                        app:strokeWidth="1dp"
+                        app:strokeColor="@color/surface_variant">
+                        <ImageView
+                            android:id="@+id/ivQrCode"
+                            android:layout_width="220dp"
+                            android:layout_height="220dp"
+                            android:contentDescription="@string/my_qr_code"
+                            android:scaleType="fitCenter"
+                            android:background="@android:color/white"
+                            android:padding="16dp"/>
+                    </com.google.android.material.card.MaterialCardView>
 
                     <!-- Tip below QR -->
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="The manager scans this code on their device"
-                        android:textSize="11sp"
-                        android:textColor="?android:attr/textColorSecondary"
+                        android:text="@string/qr_tip"
+                        android:textSize="12sp"
+                        android:textColor="@color/text_tertiary"
                         android:gravity="center"
-                        android:layout_marginTop="10dp"/>
+                        android:layout_marginTop="16dp"/>
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
 
@@ -246,32 +262,32 @@
             <com.google.android.material.card.MaterialCardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="12dp"
-                app:cardCornerRadius="12dp"
+                android:layout_marginBottom="16dp"
+                app:cardCornerRadius="24dp"
                 app:cardElevation="0dp"
-                app:strokeWidth="0.5dp"
-                app:strokeColor="?attr/colorOutline"
+                app:strokeWidth="1dp"
+                app:strokeColor="@color/surface_variant"
                 app:cardBackgroundColor="@color/surface_card">
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
-                    android:padding="16dp">
+                    android:padding="20dp">
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Weekly Activity"
-                        android:textSize="13sp"
+                        android:text="@string/weekly_activity"
+                        android:textSize="16sp"
                         android:textStyle="bold"
-                        android:textColor="?android:attr/textColorPrimary"
+                        android:textColor="@color/text_primary"
                         android:layout_marginBottom="16dp"/>
 
                     <com.github.mikephil.charting.charts.BarChart
                         android:id="@+id/barChart"
                         android:layout_width="match_parent"
-                        android:layout_height="180dp"/>
+                        android:layout_height="200dp"/>
 
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
@@ -280,22 +296,22 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Recent attendance"
-                android:textSize="13sp"
+                android:text="@string/recent_attendance"
+                android:textSize="16sp"
                 android:textStyle="bold"
-                android:textColor="?android:attr/textColorPrimary"
-                android:layout_marginBottom="8dp"
-                android:layout_marginTop="4dp"/>
+                android:textColor="@color/text_primary"
+                android:layout_marginBottom="12dp"
+                android:layout_marginTop="8dp"/>
 
             <TextView
                 android:id="@+id/tvNoRecords"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="No records yet"
-                android:textSize="13sp"
-                android:textColor="?android:attr/textColorSecondary"
+                android:text="@string/no_records_yet"
+                android:textSize="14sp"
+                android:textColor="@color/text_tertiary"
                 android:gravity="center"
-                android:padding="24dp"
+                android:padding="32dp"
                 android:visibility="gone"/>
 
             <androidx.recyclerview.widget.RecyclerView
@@ -303,7 +319,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:nestedScrollingEnabled="false"
-                android:clipToPadding="false"/>
+                android:clipToPadding="false"
+                android:paddingBottom="16dp"/>
 
         </LinearLayout>
     </ScrollView>

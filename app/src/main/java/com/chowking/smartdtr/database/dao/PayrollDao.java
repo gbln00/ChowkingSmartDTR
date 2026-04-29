@@ -32,4 +32,7 @@ public interface PayrollDao {
 
     @Query("DELETE FROM payroll WHERE cutoffFrom = :from AND cutoffTo = :to")
     void deleteByPeriod(String from, String to);
+
+    @Query("DELETE FROM payroll")
+    void deleteAll();
 }

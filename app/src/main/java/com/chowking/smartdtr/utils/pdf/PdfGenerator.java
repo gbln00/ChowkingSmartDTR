@@ -26,59 +26,88 @@ public class PdfGenerator {
         Paint paint = new Paint();
         
         // Header
-        paint.setColor(Color.RED);
-        paint.setTextSize(24f);
+        paint.setColor(Color.parseColor("#EE2D24")); // Chowking Red
+        paint.setTextSize(26f);
         paint.setTypeface(Typeface.create(Typeface.DEFAULT, Typeface.BOLD));
-        canvas.drawText("CHOWKING SMART DTR", 50, 50, paint);
+        canvas.drawText("CHOWKING SMART DTR", 50, 60, paint);
         
         paint.setColor(Color.BLACK);
+        paint.setTextSize(14f);
+        paint.setTypeface(Typeface.DEFAULT);
+        canvas.drawText("Employee Attendance & Payroll System", 50, 80, paint);
+        
         paint.setTextSize(18f);
-        canvas.drawText("PAYSLIP", 50, 80, paint);
+        paint.setTypeface(Typeface.create(Typeface.DEFAULT, Typeface.BOLD));
+        canvas.drawText("PAYSLIP", 50, 120, paint);
         
         paint.setTextSize(12f);
         paint.setTypeface(Typeface.DEFAULT);
-        canvas.drawText("Employee: " + employeeName, 50, 110, paint);
-        canvas.drawText("Period: " + e.cutoffFrom + " to " + e.cutoffTo, 50, 130, paint);
+        canvas.drawText("Employee Name: " + employeeName, 50, 150, paint);
+        canvas.drawText("Employee ID:   " + e.employeeId, 50, 165, paint);
+        canvas.drawText("Pay Period:    " + e.cutoffFrom + " to " + e.cutoffTo, 50, 180, paint);
         
-        canvas.drawLine(50, 150, 545, 150, paint);
+        canvas.drawLine(50, 200, 545, 200, paint);
         
-        // Earnings
-        int y = 180;
+        // Hours Breakdown
+        int y = 230;
+        paint.setTypeface(Typeface.create(Typeface.DEFAULT, Typeface.BOLD));
+        canvas.drawText("HOURS SUMMARY", 50, y, paint);
+        paint.setTypeface(Typeface.DEFAULT);
+        
+        y += 20; canvas.drawText("Regular Hours:", 70, y, paint); canvas.drawText(String.format("%.2f", e.regularHours), 200, y, paint);
+        y += 18; canvas.drawText("Overtime Hours:", 70, y, paint); canvas.drawText(String.format("%.2f", e.otHours), 200, y, paint);
+        y += 18; canvas.drawText("Night Hours:", 70, y, paint); canvas.drawText(String.format("%.2f", e.nightHours), 200, y, paint);
+        y += 18; canvas.drawText("Days Worked:", 70, y, paint); canvas.drawText(String.valueOf(e.daysWorked), 200, y, paint);
+
+        // Earnings and Deductions Table
+        y += 40;
         paint.setTypeface(Typeface.create(Typeface.DEFAULT, Typeface.BOLD));
         canvas.drawText("EARNINGS", 50, y, paint);
+        canvas.drawText("DEDUCTIONS", 300, y, paint);
         paint.setTypeface(Typeface.DEFAULT);
         
-        y += 25; canvas.drawText("Basic Pay", 50, y, paint); canvas.drawText(String.format("₱%,.2f", e.basicPay), 400, y, paint);
-        y += 20; canvas.drawText("Overtime", 50, y, paint); canvas.drawText(String.format("₱%,.2f", e.regularOtPay), 400, y, paint);
-        y += 20; canvas.drawText("Night Premium", 50, y, paint); canvas.drawText(String.format("₱%,.2f", e.nightPremiumPay), 400, y, paint);
-        y += 20; canvas.drawText("Holiday Pay", 50, y, paint); canvas.drawText(String.format("₱%,.2f", e.legalHolidayPay + e.specialHolidayPay), 400, y, paint);
-        y += 25; paint.setTypeface(Typeface.create(Typeface.DEFAULT, Typeface.BOLD));
-        canvas.drawText("GROSS PAY", 50, y, paint); canvas.drawText(String.format("₱%,.2f", e.grossPay), 400, y, paint);
-        paint.setTypeface(Typeface.DEFAULT);
+        int tableTop = y + 10;
+        int currentY = tableTop + 20;
         
-        y += 40;
+        // Earnings items
+        canvas.drawText("Basic Pay", 50, currentY, paint); canvas.drawText(String.format("₱%,.2f", e.basicPay), 200, currentY, paint);
+        currentY += 18;
+        canvas.drawText("OT Pay", 50, currentY, paint); canvas.drawText(String.format("₱%,.2f", e.regularOtPay), 200, currentY, paint);
+        currentY += 18;
+        canvas.drawText("Night Prem.", 50, currentY, paint); canvas.drawText(String.format("₱%,.2f", e.nightPremiumPay), 200, currentY, paint);
+        currentY += 18;
+        canvas.drawText("Holiday Pay", 50, currentY, paint); canvas.drawText(String.format("₱%,.2f", e.legalHolidayPay + e.specialHolidayPay), 200, currentY, paint);
+        
+        // Deductions items (reset Y for second column)
+        currentY = tableTop + 20;
+        canvas.drawText("SSS", 300, currentY, paint); canvas.drawText(String.format("₱%,.2f", e.sssPremium), 450, currentY, paint);
+        currentY += 18;
+        canvas.drawText("PhilHealth", 300, currentY, paint); canvas.drawText(String.format("₱%,.2f", e.philhealth), 450, currentY, paint);
+        currentY += 18;
+        canvas.drawText("Pag-IBIG", 300, currentY, paint); canvas.drawText(String.format("₱%,.2f", e.pagibigPremium), 450, currentY, paint);
+        currentY += 18;
+        canvas.drawText("Loans/Other", 300, currentY, paint); canvas.drawText(String.format("₱%,.2f", e.sssLoan + e.pagibigLoan + e.mealDeduction), 450, currentY, paint);
+
+        y = currentY + 40;
         canvas.drawLine(50, y, 545, y, paint);
         
-        // Deductions
         y += 30;
         paint.setTypeface(Typeface.create(Typeface.DEFAULT, Typeface.BOLD));
-        canvas.drawText("DEDUCTIONS", 50, y, paint);
-        paint.setTypeface(Typeface.DEFAULT);
+        canvas.drawText("GROSS PAY", 50, y, paint); canvas.drawText(String.format("₱%,.2f", e.grossPay), 200, y, paint);
         
-        y += 25; canvas.drawText("SSS Premium", 50, y, paint); canvas.drawText(String.format("₱%,.2f", e.sssPremium), 400, y, paint);
-        y += 20; canvas.drawText("PhilHealth", 50, y, paint); canvas.drawText(String.format("₱%,.2f", e.philhealth), 400, y, paint);
-        y += 20; canvas.drawText("Pag-IBIG", 50, y, paint); canvas.drawText(String.format("₱%,.2f", e.pagibigPremium), 400, y, paint);
-        y += 20; canvas.drawText("Loans", 50, y, paint); canvas.drawText(String.format("₱%,.2f", e.sssLoan + e.pagibigLoan), 400, y, paint);
-        y += 25; paint.setTypeface(Typeface.create(Typeface.DEFAULT, Typeface.BOLD));
-        canvas.drawText("TOTAL DEDUCTIONS", 50, y, paint); canvas.drawText(String.format("₱%,.2f", e.totalDeductions), 400, y, paint);
+        canvas.drawText("TOTAL DEDUCT", 300, y, paint); canvas.drawText(String.format("₱%,.2f", e.totalDeductions), 450, y, paint);
         
-        y += 40;
-        canvas.drawLine(50, y, 545, y, paint);
-        
-        y += 40;
-        paint.setTextSize(20f);
-        canvas.drawText("NET PAY", 50, y, paint);
-        canvas.drawText(String.format("₱%,.2f", e.netPay), 400, y, paint);
+        y += 50;
+        paint.setTextSize(22f);
+        paint.setColor(Color.parseColor("#2E7D32")); // Success Green
+        canvas.drawText("NET TAKE HOME PAY", 50, y, paint);
+        canvas.drawText(String.format("₱%,.2f", e.netPay), 380, y, paint);
+
+        y += 60;
+        paint.setColor(Color.GRAY);
+        paint.setTextSize(10f);
+        paint.setTypeface(Typeface.create(Typeface.DEFAULT, Typeface.ITALIC));
+        canvas.drawText("This is a computer-generated document. No signature is required.", 50, y, paint);
 
         document.finishPage(page);
 

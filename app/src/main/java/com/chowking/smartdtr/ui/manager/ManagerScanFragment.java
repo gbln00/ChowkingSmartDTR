@@ -13,6 +13,7 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.chowking.smartdtr.R;
+import com.chowking.smartdtr.utils.email.EmailService;
 import com.chowking.smartdtr.viewmodel.AttendanceViewModel;
 import com.google.android.material.button.MaterialButton;
 import com.journeyapps.barcodescanner.ScanContract;
@@ -48,13 +49,15 @@ public class ManagerScanFragment extends Fragment {
         tvLastScanned = view.findViewById(R.id.tvLastScanned);
 
         MaterialButton btnScan = view.findViewById(R.id.btnScan);
-        btnScan.setOnClickListener(v -> {
-            ScanOptions options = new ScanOptions();
-            options.setPrompt("Scan crew member QR code");
-            options.setBeepEnabled(true);
-            options.setOrientationLocked(false);
-            qrLauncher.launch(options);
-        });
+        btnScan.setOnClickListener(v -> startScan());
+    }
+
+    private void startScan() {
+        ScanOptions options = new ScanOptions();
+        options.setPrompt("Scan crew member QR code");
+        options.setBeepEnabled(true);
+        options.setOrientationLocked(false);
+        qrLauncher.launch(options);
     }
 
     private void handleScan(String scannedId) {
@@ -67,15 +70,25 @@ public class ManagerScanFragment extends Fragment {
                 case "TIME_IN":
                     tvScanResult.setText("✓ " + scannedId + " — Timed IN successfully!");
                     tvScanResult.setTextColor(requireContext().getColor(R.color.color_present));
+                    sendAttendanceEmail(scannedId, "TIME IN");
                     break;
                 case "TIME_OUT":
                     tvScanResult.setText("✓ " + scannedId + " — Timed OUT successfully!");
                     tvScanResult.setTextColor(requireContext().getColor(R.color.color_still_in));
+                    sendAttendanceEmail(scannedId, "TIME OUT");
                     break;
                 default:
                     tvScanResult.setText("✗ Error recording attendance for " + scannedId + ". Try again.");
                     tvScanResult.setTextColor(requireContext().getColor(R.color.color_absent));
             }
         });
+    }
+
+    private void sendAttendanceEmail(String employeeId, String type) {
+        String subject = "Attendance Alert: " + employeeId;
+        String body = "Employee " + employeeId + " has successfully recorded a " + type + 
+                     "\nTimestamp: " + new java.util.Date().toString();
+        
+        EmailService.sendEmail("manager-chowking@example.com", subject, body);
     }
 }

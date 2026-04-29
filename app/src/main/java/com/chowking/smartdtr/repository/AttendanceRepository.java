@@ -6,6 +6,9 @@ import androidx.lifecycle.MutableLiveData;
 import com.chowking.smartdtr.database.AppDatabase;
 import com.chowking.smartdtr.database.dao.AttendanceDao;
 import com.chowking.smartdtr.model.AttendanceRecord;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.SetOptions;
+
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
@@ -16,11 +19,13 @@ import java.util.concurrent.Executors;
 public class AttendanceRepository {
 
     private final AttendanceDao attendanceDao;
+    private final FirebaseFirestore firestore;
     private final ExecutorService executor;
 
     public AttendanceRepository(Context context) {
         attendanceDao = AppDatabase.getInstance(context).attendanceDao();
-        executor      = Executors.newSingleThreadExecutor();
+        firestore = FirebaseFirestore.getInstance();
+        executor = Executors.newSingleThreadExecutor();
     }
 
     // Returns "TIME_IN", "TIME_OUT", or "ERROR"
@@ -43,7 +48,11 @@ public class AttendanceRepository {
                     rec.timeIn     = System.currentTimeMillis();
                     rec.timeOut    = 0;
                     rec.totalHours = 0;
+                    
                     attendanceDao.insertRecord(rec);
+                    // Sync to Cloud
+                    syncRecordToCloud(rec);
+                    
                     result.postValue("TIME_IN");
                 } else {
                     // Open record found — TIME OUT
@@ -51,7 +60,11 @@ public class AttendanceRepository {
                     float hours = (now - open.timeIn) / 3600000f;
                     open.timeOut    = now;
                     open.totalHours = Math.round(hours * 100) / 100f;
+                    
                     attendanceDao.updateRecord(open);
+                    // Sync to Cloud
+                    syncRecordToCloud(open);
+                    
                     result.postValue("TIME_OUT");
                 }
             } catch (Exception e) {
@@ -59,6 +72,16 @@ public class AttendanceRepository {
             }
         });
         return result;
+    }
+
+    private void syncRecordToCloud(AttendanceRecord record) {
+        // Use a unique ID for Firestore: employeeId + date + timeIn
+        String docId = record.employeeId + "_" + record.date + "_" + record.timeIn;
+        firestore.collection("attendance")
+                .document(docId)
+                .set(record, SetOptions.merge())
+                .addOnSuccessListener(aVoid -> android.util.Log.d("AttendanceRepo", "Sync success for: " + docId))
+                .addOnFailureListener(e -> android.util.Log.e("AttendanceRepo", "Sync failed for: " + docId, e));
     }
 
     public LiveData<List<AttendanceRecord>> getRecordsByEmployee(String id) {
@@ -71,6 +94,10 @@ public class AttendanceRepository {
 
     public LiveData<List<AttendanceRecord>> getRecordsByDate(String date) {
         return attendanceDao.getRecordsByDate(date);
+    }
+
+    public LiveData<List<AttendanceRecord>> getRecordsByDateRange(String fromDate, String toDate) {
+        return attendanceDao.getAllRecordsByDateRange(fromDate, toDate);
     }
 
     public float getTotalHoursByEmployee(String id, String start, String end) {

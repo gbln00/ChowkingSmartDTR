@@ -16,10 +16,19 @@ import java.util.Locale;
 
 public class SalaryAdapter extends RecyclerView.Adapter<SalaryAdapter.ViewHolder> {
 
+    public interface OnWithdrawClickListener {
+        void onWithdraw(SalaryEntry entry);
+    }
+
     private List<SalaryEntry> entries;
+    private OnWithdrawClickListener withdrawListener;
 
     public SalaryAdapter(List<SalaryEntry> entries) {
         this.entries = entries;
+    }
+
+    public void setOnWithdrawClickListener(OnWithdrawClickListener listener) {
+        this.withdrawListener = listener;
     }
 
     public void updateEntries(List<SalaryEntry> newEntries) {
@@ -61,6 +70,12 @@ public class SalaryAdapter extends RecyclerView.Adapter<SalaryAdapter.ViewHolder
         h.tvGrossPay.setText(
                 String.format(Locale.getDefault(), "₱%.2f", e.grossPay)
         );
+
+        h.itemView.setOnClickListener(v -> {
+            if (withdrawListener != null) {
+                withdrawListener.onWithdraw(e);
+            }
+        });
     }
 
     @Override

@@ -2,4 +2,76 @@
     <string name="app_name">ChowkingSmartDTR</string>
     <string name="nav_open">Open navigation</string>
     <string name="nav_close">Close navigation</string>
+
+    <!-- Crew Dashboard -->
+    <string name="crew_not_clocked_in">○ Not clocked in — show QR to clock in</string>
+    <string name="this_week">This week</string>
+    <string name="hours_worked">Hours worked</string>
+    <string name="est_earnings">Est. earnings</string>
+    <string name="my_qr_code">My QR Code</string>
+    <string name="qr_instruction">Show this to the manager to clock in or out</string>
+    <string name="qr_tip">The manager scans this code on their device</string>
+    <string name="weekly_activity">Weekly Activity</string>
+    <string name="recent_attendance">Recent attendance</string>
+    <string name="no_records_yet">No records yet</string>
+
+    <!-- Manager Dashboard -->
+    <string name="dashboard_overview">Dashboard Overview</string>
+    <string name="completed">Completed</string>
+    <string name="on_duty">On-Duty</string>
+    <string name="total_hrs">Total Hrs</string>
+    <string name="weekly_man_hours">Weekly Man-Hours</string>
+    <string name="current_staff_breakdown">Current Staff Breakdown</string>
+
+    <!-- Admin Dashboard -->
+    <string name="system_administration">System Administration</string>
+    <string name="total_users">Total Users</string>
+    <string name="active_now">Active Now</string>
+    <string name="inactive">Inactive</string>
+    <string name="team_distribution">Team Distribution</string>
+    <string name="crew">Crew</string>
+    <string name="manager">Manager</string>
+    <string name="admin">Admin</string>
+    <string name="recent_registrations">Recent Registrations</string>
+
+    <!-- Salary Report -->
+    <string name="financial_reports">Financial Reports</string>
+    <string name="salary_distribution">Salary Distribution</string>
+    <string name="start_date">Start Date</string>
+    <string name="end_date">End Date</string>
+    <string name="generate_report">Generate Report</string>
+    <string name="estimated_total_payroll">ESTIMATED TOTAL PAYROLL</string>
+    <string name="staff_members">Staff Members</string>
+    <string name="total_hours">Total Hours</string>
+    <string name="individual_breakdown">Individual Breakdown</string>
+    <string name="no_records_period">No records for this period</string>
+
+    <!-- Attendance Item -->
+    <string name="status_still_in">STILL IN</string>
+    <string name="clock_in_label">CLOCK IN</string>
+    <string name="clock_out_label">CLOCK OUT</string>
+    <string name="zero_hours">0.0h</string>
+
+    <!-- Crew Payslip -->
+    <string name="my_payslips">My Payslips</string>
+    <string name="ytd_summary">Year-to-Date Summary</string>
+    <string name="gross_pay">Gross Pay</string>
+    <string name="deductions">Deductions</string>
+    <string name="net_pay">Net Pay</string>
+    <string name="payslip_history">PAYSLIP HISTORY</string>
+    <string name="no_payslips_available">No payslips available yet.</string>
+
+    <!-- Login -->
+    <string name="app_subtitle">Employee Attendance System</string>
+    <string name="welcome_back">Welcome Back</string>
+    <string name="employee_id">Employee ID</string>
+    <string name="password">Password</string>
+    <string name="sign_in">Sign In</string>
+    <string name="or_divider">OR</string>
+    <string name="continue_with_google">Continue with Google</string>
+    <string name="login_footer">Forgot credentials? Contact Manager</string>
+
+    <!-- Attendance History -->
+    <string name="attendance_history">Attendance History</string>
+    <string name="no_attendance_records">No attendance records yet</string>
 </resources>

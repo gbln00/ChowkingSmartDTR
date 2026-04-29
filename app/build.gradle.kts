@@ -29,6 +29,13 @@ android {
         sourceCompatibility = JavaVersion.VERSION_11
         targetCompatibility = JavaVersion.VERSION_11
     }
+
+    packaging {
+        resources {
+            excludes += "/META-INF/LICENSE.md"
+            excludes += "/META-INF/NOTICE.md"
+        }
+    }
 }
 
 dependencies {
@@ -56,6 +63,16 @@ dependencies {
 
     implementation("com.facebook.shimmer:shimmer:0.5.0")
 
+    implementation(platform("com.google.firebase:firebase-bom:33.9.0"))
+    implementation("com.google.firebase:firebase-firestore")
+    implementation("com.google.firebase:firebase-auth")
+    implementation(libs.firebase.messaging)
+
+    implementation(libs.play.services.location)
+    implementation(libs.itext7.core)
+    implementation(libs.android.mail)
+    implementation(libs.android.activation)
+    implementation(libs.androidx.biometric)
     implementation("com.google.android.gms:play-services-auth:21.2.0")
     implementation("androidx.credentials:credentials:1.3.0")
     implementation("androidx.credentials:credentials-play-services-auth:1.3.0")

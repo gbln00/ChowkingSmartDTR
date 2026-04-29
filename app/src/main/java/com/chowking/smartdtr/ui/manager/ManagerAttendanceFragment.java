@@ -24,16 +24,19 @@ import com.chowking.smartdtr.adapter.AttendanceAdapter;
 import com.chowking.smartdtr.database.AppDatabase;
 import com.chowking.smartdtr.model.AttendanceRecord;
 import com.chowking.smartdtr.utils.CsvExportUtils;
+import com.chowking.smartdtr.utils.pdf.AttendanceReportPdfGenerator;
 import com.chowking.smartdtr.viewmodel.AttendanceViewModel;
 import com.google.android.material.button.MaterialButton;
-import com.google.android.material.chip.Chip;
+import com.google.android.material.datepicker.MaterialDatePicker;
 
+import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
+import java.util.TimeZone;
 import java.util.concurrent.Executors;
 
 public class ManagerAttendanceFragment extends Fragment {
@@ -67,30 +70,76 @@ public class ManagerAttendanceFragment extends Fragment {
         rv.setLayoutManager(new LinearLayoutManager(requireContext()));
         rv.setAdapter(adapter);
 
-        Chip chipToday     = view.findViewById(R.id.chipToday);
-        Chip chipYesterday = view.findViewById(R.id.chipYesterday);
-        chipToday.setOnClickListener(v -> loadDate(todayStr()));
-        chipYesterday.setOnClickListener(v -> loadDate(yesterdayStr()));
+        MaterialButton btnPickDate = view.findViewById(R.id.btnPickDate);
+        btnPickDate.setOnClickListener(v -> showDatePicker(btnPickDate));
+
+        MaterialButton btnViewMonth = view.findViewById(R.id.btnViewMonth);
+        btnViewMonth.setOnClickListener(v -> loadCurrentMonth(btnPickDate));
 
         MaterialButton btnExport = view.findViewById(R.id.btnExport);
-        btnExport.setOnClickListener(v -> exportCsv());
+        btnExport.setOnClickListener(v -> showExportOptions());
 
         currentDate = todayStr();
+        updateDateButton(btnPickDate, currentDate);
         loadDate(currentDate);
+    }
+
+    private void showDatePicker(MaterialButton btn) {
+        MaterialDatePicker<Long> picker = MaterialDatePicker.Builder.datePicker()
+                .setTitleText("Select Attendance Date")
+                .setSelection(MaterialDatePicker.todayInUtcMilliseconds())
+                .build();
+
+        picker.addOnPositiveButtonClickListener(selection -> {
+            Calendar cal = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
+            cal.setTimeInMillis(selection);
+            String selected = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(cal.getTime());
+            updateDateButton(btn, selected);
+            loadDate(selected);
+        });
+
+        picker.show(getParentFragmentManager(), "DATE_PICKER");
+    }
+
+    private void updateDateButton(MaterialButton btn, String date) {
+        try {
+            Date d = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).parse(date);
+            String display = new SimpleDateFormat("MMM dd, yyyy", Locale.getDefault()).format(d);
+            btn.setText(display);
+        } catch (Exception e) {
+            btn.setText(date);
+        }
     }
 
     private void loadDate(String date) {
         currentDate = date;
-        viewModel.getRecordsByDate(date).observe(getViewLifecycleOwner(), records -> {
-            currentRecords = records != null ? records : new ArrayList<>();
-            adapter.updateRecords(currentRecords);
-            int present = 0, stillIn = 0;
-            for (AttendanceRecord r : currentRecords) {
-                if (r.timeOut > 0) present++; else stillIn++;
-            }
-            tvPresentCount.setText("Done: " + present);
-            tvStillInCount.setText("Still in: " + stillIn);
-        });
+        viewModel.getRecordsByDate(date).observe(getViewLifecycleOwner(), this::updateUIWithRecords);
+    }
+
+    private void loadCurrentMonth(MaterialButton dateBtn) {
+        Calendar cal = Calendar.getInstance();
+        cal.set(Calendar.DAY_OF_MONTH, 1);
+        String start = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(cal.getTime());
+        
+        cal.set(Calendar.DAY_OF_MONTH, cal.getActualMaximum(Calendar.DAY_OF_MONTH));
+        String end = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(cal.getTime());
+        
+        String monthName = new SimpleDateFormat("MMMM yyyy", Locale.getDefault()).format(new Date());
+        dateBtn.setText(monthName);
+        currentDate = "Month: " + monthName; // For display/export label
+
+        viewModel.getRecordsByDateRange(start, end).observe(getViewLifecycleOwner(), this::updateUIWithRecords);
+    }
+
+    private void updateUIWithRecords(List<AttendanceRecord> records) {
+        currentRecords = records != null ? records : new ArrayList<>();
+        adapter.updateRecords(currentRecords);
+        int present = 0, stillIn = 0;
+        for (AttendanceRecord r : currentRecords) {
+            if (r.timeOut > 0) present++; else stillIn++;
+        }
+        tvPresentCount.setText("Done: " + present);
+        tvStillInCount.setText("Still in: " + stillIn);
     }
 
     private void showEditDialog(AttendanceRecord record) {
@@ -109,36 +158,35 @@ public class ManagerAttendanceFragment extends Fragment {
         if (record.timeOut > 0) etOut.setText(fmt.format(new Date(record.timeOut)));
         layout.addView(etOut);
 
+        CheckBox cbNight = new CheckBox(requireContext());
+        cbNight.setText("Night shift (NP)");
+        cbNight.setChecked(record.isNightShift == 1);
+        layout.addView(cbNight);
+
+        CheckBox cbHoliday = new CheckBox(requireContext());
+        cbHoliday.setText("Regular holiday");
+        cbHoliday.setChecked(record.isHoliday == 1);
+        layout.addView(cbHoliday);
+
+        CheckBox cbSpecial = new CheckBox(requireContext());
+        cbSpecial.setText("Special non-working holiday");
+        cbSpecial.setChecked(record.isSpecialHoliday == 1);
+        layout.addView(cbSpecial);
+
         new AlertDialog.Builder(requireContext())
                 .setTitle("Edit: " + record.employeeId)
                 .setMessage("Date: " + record.date)
                 .setView(layout)
                 .setPositiveButton("Save", (d, w) -> saveEdit(record,
-                        etIn.getText().toString(), etOut.getText().toString()))
+                        etIn.getText().toString(), etOut.getText().toString(),
+                        cbNight.isChecked(), cbHoliday.isChecked(), cbSpecial.isChecked()))
                 .setNegativeButton("Delete", (d, w) -> confirmDelete(record))
                 .setNeutralButton("Cancel", null)
                 .show();
-
-        // Add to showEditDialog() in ManagerAttendanceFragment:
-        CheckBox cbNight   = new CheckBox(requireContext());
-        cbNight.setText("Night shift (NP)");
-        cbNight.setChecked(record.isNightShift == 1);
-
-        CheckBox cbHoliday = new CheckBox(requireContext());
-        cbHoliday.setText("Regular holiday");
-        cbHoliday.setChecked(record.isHoliday == 1);
-
-        CheckBox cbSpecial = new CheckBox(requireContext());
-        cbSpecial.setText("Special non-working holiday");
-        cbSpecial.setChecked(record.isSpecialHoliday == 1);
-
-// In saveEdit(), before updateRecord():
-        record.isNightShift     = cbNight.isChecked()   ? 1 : 0;
-        record.isHoliday        = cbHoliday.isChecked() ? 1 : 0;
-        record.isSpecialHoliday = cbSpecial.isChecked() ? 1 : 0;
     }
 
-    private void saveEdit(AttendanceRecord record, String inStr, String outStr) {
+    private void saveEdit(AttendanceRecord record, String inStr, String outStr,
+                          boolean isNight, boolean isHoliday, boolean isSpecial) {
         Executors.newSingleThreadExecutor().execute(() -> {
             try {
                 SimpleDateFormat tf = new SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.getDefault());
@@ -151,6 +199,11 @@ public class ManagerAttendanceFragment extends Fragment {
                     record.timeOut    = 0;
                     record.totalHours = 0;
                 }
+
+                record.isNightShift = isNight ? 1 : 0;
+                record.isHoliday = isHoliday ? 1 : 0;
+                record.isSpecialHoliday = isSpecial ? 1 : 0;
+
                 AppDatabase.getInstance(requireContext()).attendanceDao().updateRecord(record);
                 requireActivity().runOnUiThread(() -> {
                     Toast.makeText(requireContext(), "Record updated", Toast.LENGTH_SHORT).show();
@@ -183,14 +236,39 @@ public class ManagerAttendanceFragment extends Fragment {
                 .show();
     }
 
-    private void exportCsv() {
+    private void showExportOptions() {
         if (currentRecords.isEmpty()) {
             Toast.makeText(requireContext(), "No records to export", Toast.LENGTH_SHORT).show();
             return;
         }
+
+        String[] options = {"Export as CSV (Excel)", "Export as PDF Report"};
+        new AlertDialog.Builder(requireContext())
+                .setTitle("Export Attendance")
+                .setItems(options, (dialog, which) -> {
+                    if (which == 0) {
+                        exportCsv();
+                    } else {
+                        exportPdf();
+                    }
+                })
+                .show();
+    }
+
+    private void exportCsv() {
         Intent share = CsvExportUtils.exportAndShare(requireContext(), currentRecords, currentDate);
-        if (share != null) startActivity(Intent.createChooser(share, "Export attendance"));
-        else Toast.makeText(requireContext(), "Export failed", Toast.LENGTH_SHORT).show();
+        if (share != null) startActivity(Intent.createChooser(share, "Export CSV"));
+        else Toast.makeText(requireContext(), "CSV Export failed", Toast.LENGTH_SHORT).show();
+    }
+
+    private void exportPdf() {
+        File pdfFile = AttendanceReportPdfGenerator.generateAttendancePdf(requireContext(), currentRecords, currentDate);
+        if (pdfFile != null) {
+            Toast.makeText(requireContext(), "PDF saved to Downloads", Toast.LENGTH_LONG).show();
+            // Optional: Auto-open or share the PDF
+        } else {
+            Toast.makeText(requireContext(), "PDF Export failed", Toast.LENGTH_SHORT).show();
+        }
     }
 
     private String todayStr() {

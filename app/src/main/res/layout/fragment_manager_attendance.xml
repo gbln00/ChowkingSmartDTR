@@ -20,41 +20,44 @@
         android:textColor="?android:attr/textColorSecondary"
         android:visibility="gone"/>
 
-    <!-- Quick-date chips -->
-    <com.google.android.material.chip.ChipGroup
-        android:id="@+id/chipGroupDate"
+    <!-- Quick-date selection -->
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:orientation="horizontal"
         android:paddingHorizontal="12dp"
         android:paddingTop="8dp"
         android:paddingBottom="8dp"
-        app:selectionRequired="true"
-        app:singleSelection="true">
+        android:gravity="center_vertical">
 
-        <com.google.android.material.chip.Chip
-            android:id="@+id/chipToday"
-            style="@style/Widget.Material3.Chip.Filter"
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnPickDate"
+            style="@style/Widget.Material3.Button.TonalButton"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Select Date"
+            app:icon="@android:drawable/ic_menu_my_calendar"/>
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnViewMonth"
+            style="@style/Widget.Material3.Button.TonalButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Today"
-            android:checked="true"/>
-
-        <com.google.android.material.chip.Chip
-            android:id="@+id/chipYesterday"
-            style="@style/Widget.Material3.Chip.Filter"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Yesterday"/>
+            android:layout_marginStart="8dp"
+            android:text="This Month"
+            android:textSize="12sp"
+            app:icon="@android:drawable/ic_menu_month"/>
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/btnExport"
             style="@style/Widget.Material3.Button.TextButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Export CSV"
+            android:text="Export"
             android:textSize="12sp"
             app:icon="@android:drawable/ic_menu_share"/>
-    </com.google.android.material.chip.ChipGroup>
+    </LinearLayout>
 
     <!-- Summary counts -->
     <LinearLayout

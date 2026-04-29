@@ -4,26 +4,28 @@
     <color name="white">#FFFFFFFF</color>
 
     <color name="chowking_red">#EE2D24</color>
-    <color name="chowking_red_dark">#C41E17</color>
-    <color name="chowking_red_light">#FFEBEE</color>
+    <color name="chowking_red_dark">#B71C1C</color>
+    <color name="chowking_red_light">#FFF1F0</color>
 
-    <color name="color_overtime">#BA7517</color>
-    <color name="color_overtime_bg">#FAEEDA</color>
-    <color name="color_present">#3B6D11</color>
-    <color name="color_present_bg">#EAF3DE</color>
-    <color name="color_absent">#A32D2D</color>
-    <color name="color_absent_bg">#FCEBEB</color>
-    <color name="color_still_in">#185FA5</color>
-    <color name="color_still_in_bg">#E6F1FB</color>
+    <color name="color_overtime">#F57C00</color>
+    <color name="color_overtime_bg">#FFF3E0</color>
+    <color name="color_present">#2E7D32</color>
+    <color name="color_present_bg">#E8F5E9</color>
+    <color name="color_absent">#D32F2F</color>
+    <color name="color_absent_bg">#FFEBEE</color>
+    <color name="color_still_in">#1976D2</color>
+    <color name="color_still_in_bg">#E3F2FD</color>
 
     <color name="nav_selected">#EE2D24</color>
-    <color name="nav_unselected">#888780</color>
+    <color name="nav_unselected">#74777F</color>
 
     <color name="surface_card">#FFFFFF</color>
-    <color name="surface_page">#F8F9FA</color>
+    <color name="surface_page">#F5F7FA</color>
+    <color name="surface_variant">#F0F2F5</color>
 
-    <color name="text_primary">#212121</color>
-    <color name="text_secondary">#757575</color>
+    <color name="text_primary">#1A1C1E</color>
+    <color name="text_secondary">#44474E</color>
+    <color name="text_tertiary">#74777F</color>
 
     <color name="divider">#EEEEEE</color>
     <color name="shimmer_base">#E0E0E0</color>

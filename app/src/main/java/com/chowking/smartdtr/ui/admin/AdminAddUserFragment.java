@@ -18,6 +18,8 @@ import com.chowking.smartdtr.model.User;
 import com.chowking.smartdtr.utils.HashUtils;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.textfield.TextInputEditText;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.SetOptions;
 
 import java.util.concurrent.Executors;
 
@@ -102,6 +104,11 @@ public class AdminAddUserFragment extends Fragment {
                 user.hourlyRate   = finalRate;
                 user.isActive     = 1;
                 AppDatabase.getInstance(requireContext()).userDao().insertUser(user);
+
+                // Sync to Cloud
+                FirebaseFirestore.getInstance().collection("users")
+                        .document(user.employeeId)
+                        .set(user, SetOptions.merge());
 
                 requireActivity().runOnUiThread(() -> {
                     tvResult.setText("✓ " + name + " added successfully.");

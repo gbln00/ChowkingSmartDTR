@@ -55,7 +55,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Employee Attendance System"
+                android:text="@string/app_subtitle"
                 android:textSize="14sp"
                 android:textColor="#FFCDD2"
                 android:layout_marginBottom="32dp"/>
@@ -65,8 +65,9 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 app:cardCornerRadius="28dp"
-                app:cardElevation="4dp"
-                app:strokeWidth="0dp"
+                app:cardElevation="0dp"
+                app:strokeWidth="1dp"
+                app:strokeColor="@color/divider"
                 app:cardBackgroundColor="@color/surface_card">
 
                 <LinearLayout
@@ -78,7 +79,7 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Welcome Back"
+                        android:text="@string/welcome_back"
                         android:textSize="22sp"
                         android:textStyle="bold"
                         android:textColor="@color/text_primary"
@@ -87,7 +88,7 @@
                     <com.google.android.material.textfield.TextInputLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:hint="Employee ID"
+                        android:hint="@string/employee_id"
                         android:layout_marginBottom="16dp"
                         app:startIconDrawable="@drawable/ic_nav_users"
                         style="@style/Widget.Material3.TextInputLayout.OutlinedBox">
@@ -102,7 +103,7 @@
                     <com.google.android.material.textfield.TextInputLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:hint="Password"
+                        android:hint="@string/password"
                         android:layout_marginBottom="32dp"
                         app:startIconDrawable="@drawable/ic_nav_logout"
                         app:endIconMode="password_toggle"
@@ -119,12 +120,12 @@
                         android:id="@+id/btnLogin"
                         android:layout_width="match_parent"
                         android:layout_height="60dp"
-                        android:text="Sign In"
+                        android:text="@string/sign_in"
                         android:textSize="16sp"
                         android:textStyle="bold"
                         app:cornerRadius="18dp"
                         app:backgroundTint="@color/chowking_red"
-                        android:elevation="4dp"/>
+                        android:elevation="0dp"/>
 
                     <TextView
                         android:id="@+id/tvError"
@@ -148,7 +149,7 @@
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="OR"
+                            android:text="@string/or_divider"
                             android:textSize="12sp"
                             android:paddingHorizontal="16dp"
                             android:background="@color/surface_card"
@@ -165,7 +166,7 @@
                             style="@style/Widget.Material3.Button.TonalButton"
                             android:layout_width="match_parent"
                             android:layout_height="60dp"
-                            android:text="Continue with Google"
+                            android:text="@string/continue_with_google"
                             android:textSize="15sp"
                             app:cornerRadius="18dp"
                             app:icon="@drawable/ic_google"
@@ -189,11 +190,12 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Forgot credentials? Contact Manager"
+                android:text="@string/login_footer"
                 android:textSize="13sp"
                 android:textColor="?android:attr/textColorSecondary"
                 android:layout_marginTop="40dp"
                 android:layout_marginBottom="24dp"/>
+
 
         </LinearLayout>
     </RelativeLayout>

@@ -6,6 +6,7 @@ import android.os.Handler;
 import androidx.appcompat.app.AppCompatActivity;
 import com.chowking.smartdtr.R;
 import com.chowking.smartdtr.database.DatabaseSeeder;
+import com.chowking.smartdtr.database.SyncManager;
 import com.chowking.smartdtr.ui.admin.AdminHostActivity;
 import com.chowking.smartdtr.ui.crew.CrewHostActivity;
 import com.chowking.smartdtr.ui.manager.ManagerHostActivity;
@@ -18,7 +19,10 @@ public class SplashActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash);
 
-        // Seed data for demonstration purposes
+        // 1. Sync data from Cloud to ensure this device is updated
+        new SyncManager(this).syncFromCloud();
+
+        // 2. Seed data for demonstration purposes
         DatabaseSeeder.seed(this);
 
         SessionManager session = new SessionManager(this);

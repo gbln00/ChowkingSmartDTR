@@ -11,17 +11,136 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:padding="16dp">
+        android:padding="20dp">
 
-        <!-- Header card -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/system_administration"
+            android:textSize="14sp"
+            android:textStyle="bold"
+            android:textColor="@color/chowking_red"
+            android:letterSpacing="0.05"
+            android:layout_marginBottom="4dp"/>
+
+        <TextView
+            android:id="@+id/tvAdminGreeting"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="24sp"
+            android:textStyle="bold"
+            android:textColor="@color/text_primary"
+            android:layout_marginBottom="24dp"/>
+
+        <!-- Main Stats row -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginBottom="20dp">
+
+            <com.google.android.material.card.MaterialCardView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_marginHorizontal="4dp"
+                app:cardCornerRadius="16dp"
+                app:cardElevation="0dp"
+                app:cardBackgroundColor="@color/surface_card"
+                app:strokeWidth="1dp"
+                app:strokeColor="@color/surface_variant">
+                <LinearLayout android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="16dp">
+                    <TextView android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/total_users"
+                        android:textSize="11sp"
+                        android:textStyle="bold"
+                        android:textColor="@color/text_secondary"/>
+                    <TextView android:id="@+id/tvStatTotal"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="0"
+                        android:textSize="28sp"
+                        android:textStyle="bold"
+                        android:textColor="@color/text_primary"
+                        android:layout_marginTop="4dp"/>
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+            <com.google.android.material.card.MaterialCardView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_marginHorizontal="4dp"
+                app:cardCornerRadius="16dp"
+                app:cardElevation="0dp"
+                app:cardBackgroundColor="@color/color_present_bg"
+                app:strokeWidth="0dp">
+                <LinearLayout android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="16dp">
+                    <TextView android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/active_now"
+                        android:textSize="11sp"
+                        android:textStyle="bold"
+                        android:textColor="@color/color_present"/>
+                    <TextView android:id="@+id/tvStatActive"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="0"
+                        android:textSize="28sp"
+                        android:textStyle="bold"
+                        android:textColor="@color/color_present"
+                        android:layout_marginTop="4dp"/>
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+            <com.google.android.material.card.MaterialCardView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_marginHorizontal="4dp"
+                app:cardCornerRadius="16dp"
+                app:cardElevation="0dp"
+                app:cardBackgroundColor="@color/color_absent_bg"
+                app:strokeWidth="0dp">
+                <LinearLayout android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="16dp">
+                    <TextView android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/inactive"
+                        android:textSize="11sp"
+                        android:textStyle="bold"
+                        android:textColor="@color/color_absent"/>
+                    <TextView android:id="@+id/tvStatInactive"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="0"
+                        android:textSize="28sp"
+                        android:textStyle="bold"
+                        android:textColor="@color/color_absent"
+                        android:layout_marginTop="4dp"/>
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+        </LinearLayout>
+
+        <!-- Role breakdown Card -->
         <com.google.android.material.card.MaterialCardView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="12dp"
-            app:cardCornerRadius="16dp"
+            android:layout_marginBottom="24dp"
+            app:cardCornerRadius="24dp"
             app:cardElevation="0dp"
-            app:strokeWidth="0dp"
-            app:cardBackgroundColor="@color/chowking_red_dark">
+            app:cardBackgroundColor="@color/surface_card"
+            app:strokeWidth="1dp"
+            app:strokeColor="@color/surface_variant">
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -32,143 +151,11 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="System overview"
-                    android:textSize="11sp"
-                    android:letterSpacing="0.08"
-                    android:textColor="#FFCDD2"/>
-
-                <TextView
-                    android:id="@+id/tvAdminGreeting"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textSize="20sp"
+                    android:text="@string/team_distribution"
+                    android:textSize="16sp"
                     android:textStyle="bold"
-                    android:textColor="#FFFFFF"
-                    android:layout_marginTop="2dp"/>
-            </LinearLayout>
-        </com.google.android.material.card.MaterialCardView>
-
-        <!-- Stats row -->
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:layout_marginBottom="12dp">
-
-            <com.google.android.material.card.MaterialCardView
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:layout_marginEnd="5dp"
-                app:cardCornerRadius="12dp"
-                app:cardElevation="0dp"
-                app:strokeWidth="0.5dp"
-                app:strokeColor="?attr/colorOutline"
-                app:cardBackgroundColor="@color/surface_card">
-                <LinearLayout android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:padding="14dp">
-                    <TextView android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Total users"
-                        android:textSize="11sp"
-                        android:textColor="?android:attr/textColorSecondary"/>
-                    <TextView android:id="@+id/tvStatTotal"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="0"
-                        android:textSize="28sp"
-                        android:textStyle="bold"
-                        android:textColor="@color/chowking_red_dark"/>
-                </LinearLayout>
-            </com.google.android.material.card.MaterialCardView>
-
-            <com.google.android.material.card.MaterialCardView
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:layout_marginStart="5dp"
-                android:layout_marginEnd="5dp"
-                app:cardCornerRadius="12dp"
-                app:cardElevation="0dp"
-                app:strokeWidth="0.5dp"
-                app:strokeColor="?attr/colorOutline"
-                app:cardBackgroundColor="@color/surface_card">
-                <LinearLayout android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:padding="14dp">
-                    <TextView android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Active"
-                        android:textSize="11sp"
-                        android:textColor="?android:attr/textColorSecondary"/>
-                    <TextView android:id="@+id/tvStatActive"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="0"
-                        android:textSize="28sp"
-                        android:textStyle="bold"
-                        android:textColor="@color/color_present"/>
-                </LinearLayout>
-            </com.google.android.material.card.MaterialCardView>
-
-            <com.google.android.material.card.MaterialCardView
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:layout_marginStart="5dp"
-                app:cardCornerRadius="12dp"
-                app:cardElevation="0dp"
-                app:strokeWidth="0.5dp"
-                app:strokeColor="?attr/colorOutline"
-                app:cardBackgroundColor="@color/surface_card">
-                <LinearLayout android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:padding="14dp">
-                    <TextView android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Inactive"
-                        android:textSize="11sp"
-                        android:textColor="?android:attr/textColorSecondary"/>
-                    <TextView android:id="@+id/tvStatInactive"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="0"
-                        android:textSize="28sp"
-                        android:textStyle="bold"
-                        android:textColor="?android:attr/textColorSecondary"/>
-                </LinearLayout>
-            </com.google.android.material.card.MaterialCardView>
-        </LinearLayout>
-
-        <!-- Role breakdown -->
-        <com.google.android.material.card.MaterialCardView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="12dp"
-            app:cardCornerRadius="12dp"
-            app:cardElevation="0dp"
-            app:strokeWidth="0.5dp"
-            app:strokeColor="?attr/colorOutline"
-            app:cardBackgroundColor="@color/surface_card">
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:padding="16dp">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Role breakdown"
-                    android:textSize="13sp"
-                    android:textStyle="bold"
-                    android:textColor="?android:attr/textColorPrimary"
-                    android:layout_marginBottom="12dp"/>
+                    android:textColor="@color/text_primary"
+                    android:layout_marginBottom="20dp"/>
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -181,28 +168,24 @@
                         android:layout_weight="1"
                         android:orientation="vertical"
                         android:gravity="center">
-
                         <TextView
                             android:id="@+id/tvCrewCount"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="0"
-                            android:textSize="32sp"
+                            android:textSize="28sp"
                             android:textStyle="bold"
                             android:textColor="@color/color_still_in"/>
-
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="Crew"
+                            android:text="@string/crew"
                             android:textSize="12sp"
-                            android:textColor="?android:attr/textColorSecondary"/>
+                            android:textColor="@color/text_tertiary"/>
                     </LinearLayout>
 
-                    <View
-                        android:layout_width="0.5dp"
-                        android:layout_height="match_parent"
-                        android:background="?attr/colorOutline"/>
+                    <View android:layout_width="1dp" android:layout_height="40dp"
+                        android:layout_gravity="center" android:background="@color/surface_variant"/>
 
                     <LinearLayout
                         android:layout_width="0dp"
@@ -210,28 +193,24 @@
                         android:layout_weight="1"
                         android:orientation="vertical"
                         android:gravity="center">
-
                         <TextView
                             android:id="@+id/tvManagerCount"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="0"
-                            android:textSize="32sp"
+                            android:textSize="28sp"
                             android:textStyle="bold"
                             android:textColor="@color/color_overtime"/>
-
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="Managers"
+                            android:text="@string/manager"
                             android:textSize="12sp"
-                            android:textColor="?android:attr/textColorSecondary"/>
+                            android:textColor="@color/text_tertiary"/>
                     </LinearLayout>
 
-                    <View
-                        android:layout_width="0.5dp"
-                        android:layout_height="match_parent"
-                        android:background="?attr/colorOutline"/>
+                    <View android:layout_width="1dp" android:layout_height="40dp"
+                        android:layout_gravity="center" android:background="@color/surface_variant"/>
 
                     <LinearLayout
                         android:layout_width="0dp"
@@ -239,37 +218,33 @@
                         android:layout_weight="1"
                         android:orientation="vertical"
                         android:gravity="center">
-
                         <TextView
                             android:id="@+id/tvAdminCount"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="0"
-                            android:textSize="32sp"
+                            android:textSize="28sp"
                             android:textStyle="bold"
                             android:textColor="@color/chowking_red_dark"/>
-
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="Admins"
+                            android:text="@string/admin"
                             android:textSize="12sp"
-                            android:textColor="?android:attr/textColorSecondary"/>
+                            android:textColor="@color/text_tertiary"/>
                     </LinearLayout>
                 </LinearLayout>
             </LinearLayout>
         </com.google.android.material.card.MaterialCardView>
 
-        <!-- Recently added -->
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Recently added"
-            android:textSize="13sp"
+            android:text="@string/recent_registrations"
+            android:textSize="16sp"
             android:textStyle="bold"
-            android:textColor="?android:attr/textColorPrimary"
-            android:layout_marginBottom="8dp"
-            android:layout_marginTop="4dp"/>
+            android:textColor="@color/text_primary"
+            android:layout_marginBottom="12dp"/>
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rvRecentUsers"

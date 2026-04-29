@@ -45,7 +45,7 @@ public class CrewHistoryFragment extends Fragment {
         rv.setAdapter(adapter);
 
         TextView tvSummary    = view.findViewById(R.id.tvSummary);
-        TextView tvEmptyState = view.findViewById(R.id.tvEmptyState);
+        View tvEmptyState     = view.findViewById(R.id.tvEmptyState);
 
         Executors.newSingleThreadExecutor().execute(() -> {
             List<AttendanceRecord> records = AppDatabase.getInstance(requireContext())

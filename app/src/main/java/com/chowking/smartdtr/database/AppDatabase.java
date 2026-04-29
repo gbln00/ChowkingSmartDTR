@@ -11,12 +11,14 @@ import androidx.sqlite.db.SupportSQLiteDatabase;
 
 import com.chowking.smartdtr.database.dao.AttendanceDao;
 import com.chowking.smartdtr.database.dao.PayrollDao;
+import com.chowking.smartdtr.database.dao.ScheduleDao;
 import com.chowking.smartdtr.database.dao.UserDao;
 import com.chowking.smartdtr.model.AttendanceRecord;
 import com.chowking.smartdtr.model.PayrollEntry;
+import com.chowking.smartdtr.model.Schedule;
 import com.chowking.smartdtr.model.User;
 
-@Database(entities = {User.class, AttendanceRecord.class, PayrollEntry.class}, version = 4, exportSchema = false)
+@Database(entities = {User.class, AttendanceRecord.class, PayrollEntry.class, Schedule.class}, version = 5, exportSchema = false)
 public abstract class AppDatabase extends RoomDatabase {
 
     private static AppDatabase instance;
@@ -24,6 +26,7 @@ public abstract class AppDatabase extends RoomDatabase {
     public abstract UserDao userDao();
     public abstract AttendanceDao attendanceDao();
     public abstract PayrollDao payrollDao();
+    public abstract ScheduleDao scheduleDao();
 
     // ── Migration: v1 → v2 ────────────────────────────────────────────────
     static final Migration MIGRATION_1_2 = new Migration(1, 2) {
@@ -96,6 +99,13 @@ public abstract class AppDatabase extends RoomDatabase {
         }
     };
 
+    static final Migration MIGRATION_4_5 = new Migration(4, 5) {
+        @Override
+        public void migrate(@NonNull SupportSQLiteDatabase db) {
+            db.execSQL("CREATE TABLE IF NOT EXISTS `schedules` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `employeeId` TEXT NOT NULL, `date` TEXT NOT NULL, `shiftStart` TEXT, `shiftEnd` TEXT, `note` TEXT, `isPublished` INTEGER NOT NULL)");
+        }
+    };
+
     public static synchronized AppDatabase getInstance(Context context) {
         if (instance == null) {
             instance = Room.databaseBuilder(
@@ -103,7 +113,7 @@ public abstract class AppDatabase extends RoomDatabase {
                             AppDatabase.class,
                             "chowking_dtr_db"
                     )
-                    .addMigrations(MIGRATION_1_2, MIGRATION_2_3, MIGRATION_3_4)
+                    .addMigrations(MIGRATION_1_2, MIGRATION_2_3, MIGRATION_3_4, MIGRATION_4_5)
                     .fallbackToDestructiveMigration()
                     .build();
         }

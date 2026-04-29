@@ -6,33 +6,52 @@
     android:orientation="vertical"
     android:background="@color/surface_page">
 
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/divider"/>
+
     <TextView
         android:id="@+id/tvSummary"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="14dp"
-        android:textSize="13sp"
+        android:padding="16dp"
+        android:textSize="14sp"
         android:textStyle="bold"
-        android:textColor="?android:attr/textColorSecondary"
-        android:background="@color/surface_card"
+        android:textColor="@color/text_primary"
+        android:background="@color/white"
         android:visibility="gone"/>
 
-    <TextView
+    <LinearLayout
         android:id="@+id/tvEmptyState"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="No attendance records yet"
-        android:textSize="14sp"
-        android:textColor="?android:attr/textColorSecondary"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
         android:gravity="center"
         android:padding="40dp"
-        android:visibility="gone"/>
+        android:visibility="gone">
+
+        <ImageView
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:src="@drawable/ic_nav_history"
+            android:alpha="0.2"
+            android:layout_marginBottom="16dp"
+            android:contentDescription="@null"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/no_attendance_records"
+            android:textSize="16sp"
+            android:textColor="?android:attr/textColorSecondary"
+            android:gravity="center"/>
+    </LinearLayout>
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rvHistory"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"
-        android:padding="8dp"
+        android:layout_height="match_parent"
+        android:padding="12dp"
         android:clipToPadding="false"/>
 </LinearLayout>

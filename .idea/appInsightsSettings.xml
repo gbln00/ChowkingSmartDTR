@@ -6,14 +6,6 @@
         <entry key="Firebase Crashlytics">
           <value>
             <InsightsFilterSettings>
-              <option name="connection">
-                <ConnectionSetting>
-                  <option name="appId" value="com.chowking.smartdtr" />
-                  <option name="mobileSdkAppId" value="1:118165577053:android:3f4316c3f3f4b94a949cb4" />
-                  <option name="projectId" value="chowkingsmartdtr" />
-                  <option name="projectNumber" value="118165577053" />
-                </ConnectionSetting>
-              </option>
               <option name="signal" value="SIGNAL_UNSPECIFIED" />
               <option name="timeIntervalDays" value="THIRTY_DAYS" />
               <option name="visibilityType" value="ALL" />

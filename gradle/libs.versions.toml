@@ -13,6 +13,11 @@ recyclerview = "1.4.0"
 zxing = "4.3.0"
 jbcrypt = "0.4"
 mpandroidchart = "v3.1.0"
+playServicesLocation = "21.3.0"
+firebaseMessaging = "24.1.0"
+itext7 = "7.2.5"
+androidMail = "1.6.8"
+biometric = "1.1.0"
 
 [libraries]
 junit = { group = "junit", name = "junit", version.ref = "junit" }
@@ -30,6 +35,12 @@ recyclerview = { group = "androidx.recyclerview", name = "recyclerview", version
 zxing-android-embedded = { group = "com.journeyapps", name = "zxing-android-embedded", version.ref = "zxing" }
 jbcrypt = { group = "org.mindrot", name = "jbcrypt", version.ref = "jbcrypt" }
 mpandroidchart = { group = "com.github.PhilJay", name = "MPAndroidChart", version.ref = "mpandroidchart" }
+play-services-location = { group = "com.google.android.gms", name = "play-services-location", version.ref = "playServicesLocation" }
+firebase-messaging = { group = "com.google.firebase", name = "firebase-messaging", version.ref = "firebaseMessaging" }
+itext7-core = { group = "com.itextpdf", name = "itext7-core", version.ref = "itext7" }
+android-mail = { group = "com.sun.mail", name = "android-mail", version.ref = "androidMail" }
+android-activation = { group = "com.sun.mail", name = "android-activation", version.ref = "androidMail" }
+androidx-biometric = { group = "androidx.biometric", name = "biometric", version.ref = "biometric" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

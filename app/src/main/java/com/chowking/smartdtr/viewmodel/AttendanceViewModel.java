@@ -32,4 +32,8 @@ public class AttendanceViewModel extends AndroidViewModel {
     public LiveData<List<AttendanceRecord>> getRecordsByDate(String date) {
         return repository.getRecordsByDate(date);
     }
+
+    public LiveData<List<AttendanceRecord>> getRecordsByDateRange(String fromDate, String toDate) {
+        return repository.getRecordsByDateRange(fromDate, toDate);
+    }
 }

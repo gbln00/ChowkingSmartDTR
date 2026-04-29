@@ -17,8 +17,11 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.chowking.smartdtr.R;
 import com.chowking.smartdtr.adapter.SalaryAdapter;
 import com.chowking.smartdtr.model.SalaryEntry;
+import com.chowking.smartdtr.utils.biometric.BiometricHelper;
+import com.chowking.smartdtr.utils.email.EmailService;
 import com.chowking.smartdtr.viewmodel.SalaryViewModel;
 import com.google.android.material.button.MaterialButton;
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.textfield.TextInputEditText;
 
 import java.text.SimpleDateFormat;
@@ -64,6 +67,7 @@ public class ManagerSalaryFragment extends Fragment {
 
         RecyclerView rv = view.findViewById(R.id.rvSalary);
         adapter = new SalaryAdapter(new ArrayList<>());
+        adapter.setOnWithdrawClickListener(entry -> showWithdrawDialog(entry));
         rv.setLayoutManager(new LinearLayoutManager(requireContext()));
         rv.setAdapter(adapter);
 
@@ -108,5 +112,50 @@ public class ManagerSalaryFragment extends Fragment {
             String date = String.format(Locale.getDefault(), "%04d-%02d-%02d", year, month + 1, dayOfMonth);
             editText.setText(date);
         }, cal.get(Calendar.YEAR), cal.get(Calendar.MONTH), cal.get(Calendar.DAY_OF_MONTH)).show();
+    }
+
+    private void showWithdrawDialog(SalaryEntry entry) {
+        new MaterialAlertDialogBuilder(requireContext())
+                .setTitle("Confirm Withdrawal")
+                .setMessage("Record withdrawal for " + entry.fullName + " (₱" + String.format(Locale.getDefault(), "%.2f", entry.grossPay) + ")?")
+                .setPositiveButton("Withdraw", (dialog, which) -> {
+                    // Start Biometric Authentication
+                    BiometricHelper.showBiometricPrompt(
+                            this,
+                            "Manager Verification",
+                            "Please scan your fingerprint to authorize this withdrawal.",
+                            new BiometricHelper.BiometricCallback() {
+                                @Override
+                                public void onAuthenticationSuccess() {
+                                    sendWithdrawalNotification(entry);
+                                }
+
+                                @Override
+                                public void onAuthenticationError(String error) {
+                                    new MaterialAlertDialogBuilder(requireContext())
+                                            .setTitle("Auth Failed")
+                                            .setMessage(error)
+                                            .setPositiveButton("OK", null)
+                                            .show();
+                                }
+                            }
+                    );
+                })
+                .setNegativeButton("Cancel", null)
+                .show();
+    }
+
+    private void sendWithdrawalNotification(SalaryEntry entry) {
+        String subject = "Salary Withdrawal Notification - " + entry.fullName;
+        String body = "Hello " + entry.fullName + ",\n\n" +
+                "Your salary for the period has been processed and is ready for withdrawal.\n\n" +
+                "Details:\n" +
+                "Employee ID: " + entry.employeeId + "\n" +
+                "Total Amount: ₱" + String.format("%.2f", entry.grossPay) + "\n" +
+                "Status: PROCESSED\n\n" +
+                "Please visit the management office to receive your pay.";
+
+        // For demo, sending to a placeholder. In production, use entry.email
+        EmailService.sendEmail("crew-placeholder@example.com", subject, body);
     }
 }
