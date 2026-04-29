@@ -12,7 +12,20 @@
           "package_name": "com.chowking.smartdtr"
         }
       },
-      "oauth_client": [],
+      "oauth_client": [
+        {
+          "client_id": "118165577053-kpv5l8e3s3367okn6vcctsg2l1m7nvbq.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.chowking.smartdtr",
+            "certificate_hash": "ecc5b57476b706a79478d82d47a92d1a69eccc71"
+          }
+        },
+        {
+          "client_id": "118165577053-mghqen28dn3jnmh75i5md6j2ec6qhvhn.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
       "api_key": [
         {
           "current_key": "AIzaSyDUg1C5AlSoFuF4lR14BSvRry6y1WZuJ-I"
@@ -20,7 +33,12 @@
       ],
       "services": {
         "appinvite_service": {
-          "other_platform_oauth_client": []
+          "other_platform_oauth_client": [
+            {
+              "client_id": "118165577053-mghqen28dn3jnmh75i5md6j2ec6qhvhn.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
         }
       }
     }

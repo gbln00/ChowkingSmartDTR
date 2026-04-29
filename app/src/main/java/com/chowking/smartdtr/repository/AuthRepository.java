@@ -32,12 +32,23 @@ public class AuthRepository {
         });
         return result;
     }
-    /** Login via Google — matches googleId stored on the User record */
-    public LiveData<User> loginWithGoogle(String googleId) {
+    /** Login via Google — matches googleId or email stored on the User record */
+    public LiveData<User> loginWithGoogle(String googleId, String email) {
         MutableLiveData<User> result = new MutableLiveData<>();
         executor.execute(() -> {
+            // 1. Try matching by unique Google Sub ID
             User user = userDao.getUserByGoogleId(googleId);
-            result.postValue(user); // null = not linked yet
+
+            // 2. If no match by ID, try matching by verified Email
+            if (user == null && email != null) {
+                user = userDao.getUserByEmail(email);
+                // Auto-link the googleId for future logins if email matched
+                if (user != null) {
+                    userDao.linkGoogleAccount(user.id, googleId);
+                }
+            }
+
+            result.postValue(user); // null = not linked and email not found
         });
         return result;
     }

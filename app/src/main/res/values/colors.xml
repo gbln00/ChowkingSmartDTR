@@ -20,5 +20,10 @@
     <color name="nav_unselected">#888780</color>
 
     <color name="surface_card">#FFFFFF</color>
-    <color name="surface_page">#F6F5F3</color>
+    <color name="surface_page">#F8F9FA</color>
+
+    <color name="text_primary">#212121</color>
+    <color name="text_secondary">#757575</color>
+
+    <color name="divider">#EEEEEE</color>
 </resources>

@@ -8,24 +8,16 @@ import java.util.UUID;
 
 public class GoogleAuthHelper {
 
-    // Paste your Web Client ID from Firebase console →
-    // Project Settings → General → Web API Key area,
-    // OR from google-services.json: client[0].oauth_client
-    // where client_type = 3
+    // Replace this with your actual Web Client ID from Firebase
     public static final String WEB_CLIENT_ID =
-            "YOUR_WEB_CLIENT_ID.apps.googleusercontent.com";
-
-    public static GetGoogleIdOption buildSignInOption() {
-        return new GetGoogleIdOption.Builder()
-                .setFilterByAuthorizedAccounts(false) // show all accounts
-                .setServerClientId(WEB_CLIENT_ID)
-                .setAutoSelectEnabled(false)
-                .build();
-    }
+            "118165577053-mghqen28dn3jnmh75i5md6j2ec6qhvhn.apps.googleusercontent.com";
 
     public static GetCredentialRequest buildRequest() {
+        GetSignInWithGoogleOption googleIdOption = new GetSignInWithGoogleOption.Builder(WEB_CLIENT_ID)
+                .build();
+
         return new GetCredentialRequest.Builder()
-                .addCredentialOption(buildSignInOption())
+                .addCredentialOption(googleIdOption)
                 .build();
     }
 }

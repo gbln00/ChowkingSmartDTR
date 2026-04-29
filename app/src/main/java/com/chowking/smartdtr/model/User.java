@@ -1,6 +1,7 @@
 package com.chowking.smartdtr.model;
 
 import androidx.annotation.Nullable;
+import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
 
@@ -30,6 +31,7 @@ public class User {
 
     // ── New in v2 ──────────────────────────────────────────────────────────
     /** Hourly rate in PHP. Default = ₱76.25 (Region 10 min wage ÷ 8 hrs) */
+    @ColumnInfo(defaultValue = "0.0")
     public float hourlyRate = 76.25f;
 
     /** Human-readable position title, e.g. "Service Crew", "Cashier" */
@@ -39,10 +41,14 @@ public class User {
      * Soft-delete flag. 1 = active, 0 = deactivated.
      * Deactivated users cannot log in but their attendance records are preserved.
      */
+    @ColumnInfo(defaultValue = "0")
     public int isActive = 1;
 
+    @ColumnInfo(defaultValue = "0.0")
     public float sssLoanMonthly    = 0f;  // monthly amortization
+    @ColumnInfo(defaultValue = "0.0")
     public float pagibigLoanMonthly = 0f;
+    @ColumnInfo(defaultValue = "0.0")
     public float mealDeductionRate  = 0f; // daily meal deduction amount
 
 

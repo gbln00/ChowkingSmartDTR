@@ -88,13 +88,11 @@ public abstract class AppDatabase extends RoomDatabase {
     };
 
 
-// Add this migration constant:
     static final Migration MIGRATION_3_4 = new Migration(3, 4) {
         @Override
         public void migrate(@NonNull SupportSQLiteDatabase db) {
-            db.execSQL(
-                    "ALTER TABLE users ADD COLUMN googleId TEXT"
-            );
+            db.execSQL("ALTER TABLE users ADD COLUMN googleId TEXT");
+            db.execSQL("ALTER TABLE users ADD COLUMN email TEXT");
         }
     };
 

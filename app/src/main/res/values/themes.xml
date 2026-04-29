@@ -5,6 +5,9 @@
         <item name="colorOnPrimary">@color/white</item>
         <item name="colorSurface">@color/surface_card</item>
         <item name="android:windowBackground">@color/surface_page</item>
+        <item name="android:statusBarColor">@color/chowking_red_dark</item>
+        <item name="android:navigationBarColor">@color/surface_page</item>
+        <item name="android:windowLightStatusBar" tools:targetApi="m">false</item>
     </style>
 
     <style name="Theme.ChowkingSmartDTR" parent="Base.Theme.ChowkingSmartDTR" />

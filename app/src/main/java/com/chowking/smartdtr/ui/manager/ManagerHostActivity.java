@@ -5,7 +5,9 @@ import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
@@ -13,6 +15,7 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
 
 import com.chowking.smartdtr.R;
 import com.chowking.smartdtr.ui.LoginActivity;
@@ -24,6 +27,7 @@ public class ManagerHostActivity extends AppCompatActivity
 
     private DrawerLayout drawerLayout;
     private SessionManager session;
+    private NavigationView navView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,7 +40,7 @@ public class ManagerHostActivity extends AppCompatActivity
         setSupportActionBar(toolbar);
 
         drawerLayout = findViewById(R.id.drawerLayout);
-        NavigationView navView = findViewById(R.id.navView);
+        navView = findViewById(R.id.navView);
 
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawerLayout, toolbar,
@@ -47,32 +51,63 @@ public class ManagerHostActivity extends AppCompatActivity
 
         navView.setNavigationItemSelectedListener(this);
 
+        // Sync Nav View and Title on back stack change
+        getSupportFragmentManager().addOnBackStackChangedListener(() -> {
+            Fragment currentFragment = getSupportFragmentManager().findFragmentById(R.id.contentFrame);
+            if (currentFragment != null) {
+                updateUIForFragment(currentFragment);
+            }
+        });
+
         // Populate drawer header
         View header = navView.getHeaderView(0);
         ((TextView) header.findViewById(R.id.tvDrawerName)).setText(session.getFullName());
 
         // Default screen
         if (savedInstanceState == null) {
-            loadFragment(new ManagerDashboardFragment(), "Dashboard");
+            loadFragment(new ManagerDashboardFragment(), "Dashboard", false);
             navView.setCheckedItem(R.id.nav_manager_dashboard);
         }
     }
 
+    private void updateUIForFragment(Fragment fragment) {
+        if (fragment instanceof ManagerDashboardFragment) {
+            if (getSupportActionBar() != null) getSupportActionBar().setTitle("Dashboard");
+            navView.setCheckedItem(R.id.nav_manager_dashboard);
+        } else if (fragment instanceof ManagerScanFragment) {
+            if (getSupportActionBar() != null) getSupportActionBar().setTitle("Scan Attendance");
+            navView.setCheckedItem(R.id.nav_manager_scan);
+        } else if (fragment instanceof ManagerAttendanceFragment) {
+            if (getSupportActionBar() != null) getSupportActionBar().setTitle("Attendance Log");
+            navView.setCheckedItem(R.id.nav_manager_attendance);
+        } else if (fragment instanceof ManagerReportFragment) {
+            if (getSupportActionBar() != null) getSupportActionBar().setTitle("Report");
+            navView.setCheckedItem(R.id.nav_manager_report);
+        } else if (fragment instanceof ManagerSalaryFragment) {
+            if (getSupportActionBar() != null) getSupportActionBar().setTitle("Salary");
+            navView.setCheckedItem(R.id.nav_manager_salary);
+        } else if (fragment instanceof ManagerPayrollFragment) {
+            if (getSupportActionBar() != null) getSupportActionBar().setTitle("Payroll");
+            navView.setCheckedItem(R.id.nav_manager_payroll);
+        }
+    }
+
     @Override
-    public boolean onNavigationItemSelected(MenuItem item) {
+    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         int id = item.getItemId();
         if (id == R.id.nav_manager_dashboard) {
-            loadFragment(new ManagerDashboardFragment(), "Dashboard");
+            getSupportFragmentManager().popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
+            loadFragment(new ManagerDashboardFragment(), "Dashboard", false);
         } else if (id == R.id.nav_manager_scan) {
-            loadFragment(new ManagerScanFragment(), "Scan Attendance");
+            loadFragment(new ManagerScanFragment(), "Scan Attendance", true);
         } else if (id == R.id.nav_manager_attendance) {
-            loadFragment(new ManagerAttendanceFragment(), "Attendance Log");
+            loadFragment(new ManagerAttendanceFragment(), "Attendance Log", true);
         } else if (id == R.id.nav_manager_report) {
-            loadFragment(new ManagerReportFragment(), "Report");
+            loadFragment(new ManagerReportFragment(), "Report", true);
         } else if (id == R.id.nav_manager_salary) {
-            loadFragment(new ManagerSalaryFragment(), "Salary");
+            loadFragment(new ManagerSalaryFragment(), "Salary", true);
         } else if (id == R.id.nav_manager_payroll) {
-            loadFragment(new ManagerPayrollFragment(), "Payroll");
+            loadFragment(new ManagerPayrollFragment(), "Payroll", true);
         } else if (id == R.id.nav_logout) {
             confirmLogout();
             return true;
@@ -82,11 +117,30 @@ public class ManagerHostActivity extends AppCompatActivity
     }
 
     private void loadFragment(Fragment fragment, String title) {
+        loadFragment(fragment, title, true);
+    }
+
+    private void loadFragment(Fragment fragment, String title, boolean addToBackStack) {
+        Fragment current = getSupportFragmentManager().findFragmentById(R.id.contentFrame);
+        if (current != null && current.getClass().equals(fragment.getClass())) {
+            drawerLayout.closeDrawer(GravityCompat.START);
+            return;
+        }
+
         if (getSupportActionBar() != null) getSupportActionBar().setTitle(title);
-        getSupportFragmentManager()
+        androidx.fragment.app.FragmentTransaction transaction = getSupportFragmentManager()
                 .beginTransaction()
-                .replace(R.id.contentFrame, fragment)
-                .commit();
+                .setCustomAnimations(
+                        R.anim.slide_in_right,
+                        R.anim.fade_out,
+                        R.anim.slide_in_left,
+                        R.anim.slide_out_right
+                )
+                .replace(R.id.contentFrame, fragment);
+        if (addToBackStack) {
+            transaction.addToBackStack(null);
+        }
+        transaction.commit();
     }
 
     private void confirmLogout() {
@@ -102,12 +156,32 @@ public class ManagerHostActivity extends AppCompatActivity
                 .show();
     }
 
+    private long backPressedTime;
+    private android.widget.Toast backToast;
+
     @Override
     public void onBackPressed() {
         if (drawerLayout.isDrawerOpen(GravityCompat.START)) {
             drawerLayout.closeDrawer(GravityCompat.START);
+        } else if (getSupportFragmentManager().getBackStackEntryCount() > 0) {
+            getSupportFragmentManager().popBackStack();
         } else {
-            super.onBackPressed();
+            Fragment currentFragment = getSupportFragmentManager().findFragmentById(R.id.contentFrame);
+            if (!(currentFragment instanceof ManagerDashboardFragment)) {
+                // If not on dashboard, go to dashboard first
+                loadFragment(new ManagerDashboardFragment(), "Dashboard", false);
+                navView.setCheckedItem(R.id.nav_manager_dashboard);
+            } else {
+                // If on dashboard, double tap to exit
+                if (backPressedTime + 2000 > System.currentTimeMillis()) {
+                    if (backToast != null) backToast.cancel();
+                    super.onBackPressed();
+                } else {
+                    backToast = Toast.makeText(this, "Press back again to exit", Toast.LENGTH_SHORT);
+                    backToast.show();
+                    backPressedTime = System.currentTimeMillis();
+                }
+            }
         }
     }
 }

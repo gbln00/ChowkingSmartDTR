@@ -20,8 +20,8 @@ public class LoginViewModel extends AndroidViewModel {
         return repository.login(employeeId, password);
     }
 
-    public LiveData<User> loginWithGoogle(String googleId) {
-        return repository.loginWithGoogle(googleId);
+    public LiveData<User> loginWithGoogle(String googleId, String email) {
+        return repository.loginWithGoogle(googleId, email);
     }
 
     public void linkGoogle(int userId, String googleId) {

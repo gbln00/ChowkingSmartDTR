@@ -63,6 +63,9 @@ public interface UserDao {
     @Query("SELECT * FROM users WHERE googleId = :googleId AND isActive = 1 LIMIT 1")
     User getUserByGoogleId(String googleId);
 
+    @Query("SELECT * FROM users WHERE email = :email AND isActive = 1 LIMIT 1")
+    User getUserByEmail(String email);
+
     // ── Link Google account ───────────────────────────────────────────────
     @Query("UPDATE users SET googleId = :googleId WHERE id = :userId")
     void linkGoogleAccount(int userId, String googleId);

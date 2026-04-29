@@ -5,7 +5,9 @@ import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
@@ -13,6 +15,7 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
 
 import com.chowking.smartdtr.R;
 import com.chowking.smartdtr.ui.LoginActivity;
@@ -24,6 +27,7 @@ public class CrewHostActivity extends AppCompatActivity
 
     private DrawerLayout drawerLayout;
     private SessionManager session;
+    private NavigationView navView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,7 +40,7 @@ public class CrewHostActivity extends AppCompatActivity
         setSupportActionBar(toolbar);
 
         drawerLayout = findViewById(R.id.drawerLayout);
-        NavigationView navView = findViewById(R.id.navView);
+        navView = findViewById(R.id.navView);
 
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawerLayout, toolbar,
@@ -47,6 +51,14 @@ public class CrewHostActivity extends AppCompatActivity
 
         navView.setNavigationItemSelectedListener(this);
 
+        // Sync Nav View and Title on back stack change
+        getSupportFragmentManager().addOnBackStackChangedListener(() -> {
+            Fragment currentFragment = getSupportFragmentManager().findFragmentById(R.id.contentFrame);
+            if (currentFragment != null) {
+                updateUIForFragment(currentFragment);
+            }
+        });
+
         // Populate drawer header with session data
         View header = navView.getHeaderView(0);
         TextView tvName = header.findViewById(R.id.tvDrawerName);
@@ -56,20 +68,34 @@ public class CrewHostActivity extends AppCompatActivity
 
         // Default screen
         if (savedInstanceState == null) {
-            loadFragment(new CrewDashboardFragment(), "Home");
+            loadFragment(new CrewDashboardFragment(), "Home", false);
             navView.setCheckedItem(R.id.nav_crew_home);
         }
     }
 
+    private void updateUIForFragment(Fragment fragment) {
+        if (fragment instanceof CrewDashboardFragment) {
+            if (getSupportActionBar() != null) getSupportActionBar().setTitle("Home");
+            navView.setCheckedItem(R.id.nav_crew_home);
+        } else if (fragment instanceof CrewHistoryFragment) {
+            if (getSupportActionBar() != null) getSupportActionBar().setTitle("My History");
+            navView.setCheckedItem(R.id.nav_crew_history);
+        } else if (fragment instanceof CrewPayslipFragment) {
+            if (getSupportActionBar() != null) getSupportActionBar().setTitle("My Payslip");
+            navView.setCheckedItem(R.id.nav_crew_payslip);
+        }
+    }
+
     @Override
-    public boolean onNavigationItemSelected(MenuItem item) {
+    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         int id = item.getItemId();
         if (id == R.id.nav_crew_home) {
-            loadFragment(new CrewDashboardFragment(), "Home");
+            getSupportFragmentManager().popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
+            loadFragment(new CrewDashboardFragment(), "Home", false);
         } else if (id == R.id.nav_crew_history) {
-            loadFragment(new CrewHistoryFragment(), "My History");
+            loadFragment(new CrewHistoryFragment(), "My History", true);
         } else if (id == R.id.nav_crew_payslip) {
-            loadFragment(new CrewPayslipFragment(), "My Payslip");
+            loadFragment(new CrewPayslipFragment(), "My Payslip", true);
         } else if (id == R.id.nav_logout) {
             confirmLogout();
             return true;
@@ -79,11 +105,30 @@ public class CrewHostActivity extends AppCompatActivity
     }
 
     private void loadFragment(Fragment fragment, String title) {
+        loadFragment(fragment, title, true);
+    }
+
+    private void loadFragment(Fragment fragment, String title, boolean addToBackStack) {
+        Fragment current = getSupportFragmentManager().findFragmentById(R.id.contentFrame);
+        if (current != null && current.getClass().equals(fragment.getClass())) {
+            drawerLayout.closeDrawer(GravityCompat.START);
+            return;
+        }
+
         if (getSupportActionBar() != null) getSupportActionBar().setTitle(title);
-        getSupportFragmentManager()
+        androidx.fragment.app.FragmentTransaction transaction = getSupportFragmentManager()
                 .beginTransaction()
-                .replace(R.id.contentFrame, fragment)
-                .commit();
+                .setCustomAnimations(
+                        R.anim.slide_in_right,  // enter
+                        R.anim.fade_out,        // exit
+                        R.anim.slide_in_left,   // popEnter
+                        R.anim.slide_out_right  // popExit
+                )
+                .replace(R.id.contentFrame, fragment);
+        if (addToBackStack) {
+            transaction.addToBackStack(null);
+        }
+        transaction.commit();
     }
 
     private void confirmLogout() {
@@ -99,12 +144,32 @@ public class CrewHostActivity extends AppCompatActivity
                 .show();
     }
 
+    private long backPressedTime;
+    private Toast backToast;
+
     @Override
     public void onBackPressed() {
         if (drawerLayout.isDrawerOpen(GravityCompat.START)) {
             drawerLayout.closeDrawer(GravityCompat.START);
+        } else if (getSupportFragmentManager().getBackStackEntryCount() > 0) {
+            getSupportFragmentManager().popBackStack();
         } else {
-            super.onBackPressed();
+            Fragment currentFragment = getSupportFragmentManager().findFragmentById(R.id.contentFrame);
+            if (!(currentFragment instanceof CrewDashboardFragment)) {
+                // If not on home and stack empty, go to home
+                loadFragment(new CrewDashboardFragment(), "Home", false);
+                navView.setCheckedItem(R.id.nav_crew_home);
+            } else {
+                // If on home, double tap to exit
+                if (backPressedTime + 2000 > System.currentTimeMillis()) {
+                    if (backToast != null) backToast.cancel();
+                    super.onBackPressed();
+                } else {
+                    backToast = Toast.makeText(this, "Press back again to exit", Toast.LENGTH_SHORT);
+                    backToast.show();
+                    backPressedTime = System.currentTimeMillis();
+                }
+            }
         }
     }
 }

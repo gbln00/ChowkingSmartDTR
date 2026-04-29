@@ -77,6 +77,13 @@ public class AdminManageUsersFragment extends Fragment {
         tilName.addView(etName);
         layout.addView(tilName);
 
+        TextInputLayout tilEmail = makeInputLayout("Email Address (for Google Sign-in)");
+        TextInputEditText etEmail = new TextInputEditText(requireContext());
+        etEmail.setInputType(InputType.TYPE_TEXT_VARIATION_EMAIL_ADDRESS);
+        etEmail.setText(user.email);
+        tilEmail.addView(etEmail);
+        layout.addView(tilEmail);
+
         TextInputLayout tilPos = makeInputLayout("Position");
         TextInputEditText etPos = new TextInputEditText(requireContext());
         etPos.setText(user.position);
@@ -90,17 +97,26 @@ public class AdminManageUsersFragment extends Fragment {
         tilRate.addView(etRate);
         layout.addView(tilRate);
 
-        EditText etSssLoan = makeEditText("SSS Loan / cutoff (₱)",
-                String.valueOf(user.sssLoanMonthly), InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_DECIMAL);
-        layout.addView(etSssLoan);
+        TextInputLayout tilSss = makeInputLayout("SSS Loan / cutoff (₱)");
+        TextInputEditText etSssLoan = new TextInputEditText(requireContext());
+        etSssLoan.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_DECIMAL);
+        etSssLoan.setText(String.valueOf(user.sssLoanMonthly));
+        tilSss.addView(etSssLoan);
+        layout.addView(tilSss);
 
-        EditText etPagibigLoan = makeEditText("Pag-IBIG Loan / cutoff (₱)",
-                String.valueOf(user.pagibigLoanMonthly), InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_DECIMAL);
-        layout.addView(etPagibigLoan);
+        TextInputLayout tilPagibig = makeInputLayout("Pag-IBIG Loan / cutoff (₱)");
+        TextInputEditText etPagibigLoan = new TextInputEditText(requireContext());
+        etPagibigLoan.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_DECIMAL);
+        etPagibigLoan.setText(String.valueOf(user.pagibigLoanMonthly));
+        tilPagibig.addView(etPagibigLoan);
+        layout.addView(tilPagibig);
 
-        EditText etMealDed = makeEditText("Meal deduction / day (₱)",
-                String.valueOf(user.mealDeductionRate), InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_DECIMAL);
-        layout.addView(etMealDed);
+        TextInputLayout tilMeal = makeInputLayout("Meal deduction / day (₱)");
+        TextInputEditText etMealDed = new TextInputEditText(requireContext());
+        etMealDed.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_DECIMAL);
+        etMealDed.setText(String.valueOf(user.mealDeductionRate));
+        tilMeal.addView(etMealDed);
+        layout.addView(tilMeal);
 
         TextInputLayout tilRole = new TextInputLayout(
                 requireContext(), null,
@@ -131,6 +147,7 @@ public class AdminManageUsersFragment extends Fragment {
                 .setView(layout)
                 .setPositiveButton("Save", (d, w) -> {
                     String newName = etName.getText() != null ? etName.getText().toString().trim() : "";
+                    String newEmail = etEmail.getText() != null ? etEmail.getText().toString().trim() : "";
                     String newPos = etPos.getText() != null ? etPos.getText().toString().trim() : "";
                     String newRole = acRole.getText().toString().trim();
                     String rateStr = etRate.getText() != null ? etRate.getText().toString().trim() : "";
@@ -142,6 +159,7 @@ public class AdminManageUsersFragment extends Fragment {
 
                     try {
                         user.fullName = newName;
+                        user.email = newEmail;
                         user.position = newPos;
                         user.role = newRole;
                         if (!rateStr.isEmpty()) user.hourlyRate = Float.parseFloat(rateStr);

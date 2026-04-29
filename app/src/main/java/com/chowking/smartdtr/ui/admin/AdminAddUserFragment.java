@@ -37,6 +37,7 @@ public class AdminAddUserFragment extends Fragment {
 
         TextInputEditText etId       = view.findViewById(R.id.etNewId);
         TextInputEditText etName     = view.findViewById(R.id.etNewName);
+        TextInputEditText etEmail    = view.findViewById(R.id.etNewEmail);
         TextInputEditText etPass     = view.findViewById(R.id.etNewPass);
         TextInputEditText etPosition = view.findViewById(R.id.etNewPosition);
         TextInputEditText etRate     = view.findViewById(R.id.etNewRate);
@@ -62,6 +63,7 @@ public class AdminAddUserFragment extends Fragment {
         btnAdd.setOnClickListener(v -> {
             String id       = getText(etId);
             String name     = getText(etName);
+            String email    = getText(etEmail);
             String pass     = getText(etPass);
             String position = getText(etPosition);
             String role     = acRole.getText().toString().trim();
@@ -93,6 +95,7 @@ public class AdminAddUserFragment extends Fragment {
                 User user         = new User();
                 user.employeeId   = id;
                 user.fullName     = name;
+                user.email        = email;
                 user.role         = role.isEmpty() ? "CREW" : role;
                 user.passwordHash = HashUtils.hashPassword(pass);
                 user.position     = position.isEmpty() ? "Crew Member" : position;
@@ -104,7 +107,7 @@ public class AdminAddUserFragment extends Fragment {
                     tvResult.setText("✓ " + name + " added successfully.");
                     tvResult.setTextColor(requireContext().getColor(R.color.color_present));
                     tvResult.setVisibility(View.VISIBLE);
-                    etId.setText(""); etName.setText(""); etPass.setText("");
+                    etId.setText(""); etName.setText(""); etEmail.setText(""); etPass.setText("");
                     etPosition.setText(""); etRate.setText("");
                     acRole.setText("CREW", false);
                 });

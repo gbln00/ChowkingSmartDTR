@@ -4,8 +4,11 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.*;
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
 import androidx.credentials.*;
+import androidx.credentials.exceptions.GetCredentialException;
 import androidx.lifecycle.ViewModelProvider;
 import com.chowking.smartdtr.R;
 import com.chowking.smartdtr.ui.admin.AdminHostActivity;
@@ -45,6 +48,7 @@ public class LoginActivity extends AppCompatActivity {
         TextView tvError   = findViewById(R.id.tvError);
         Button   btnLogin  = findViewById(R.id.btnLogin);
         MaterialButton btnGoogle = findViewById(R.id.btnGoogleSignIn);
+        ProgressBar pbGoogle = findViewById(R.id.pbGoogle);
 
         // ── Password login ──────────────────────────────────────────────
         btnLogin.setOnClickListener(v -> {
@@ -81,62 +85,93 @@ public class LoginActivity extends AppCompatActivity {
         });
 
         // ── Google Sign-In ──────────────────────────────────────────────
-        btnGoogle.setOnClickListener(v -> launchGoogleSignIn(tvError));
+        btnGoogle.setOnClickListener(v -> launchGoogleSignIn(btnGoogle, pbGoogle, tvError));
     }
 
-    private void launchGoogleSignIn(TextView tvError) {
-        credentialManager.getCredentialAsync(
-                this,
-                GoogleAuthHelper.buildRequest(),
-                null,
-                Runnable::run,
-                new CredentialManagerCallback<GetCredentialResponse,
-                        GetCredentialException>() {
-                    @Override
-                    public void onResult(GetCredentialResponse response) {
-                        handleGoogleCredential(response, tvError);
-                    }
+    private void launchGoogleSignIn(MaterialButton btn, ProgressBar pb, TextView tvError) {
+        btn.setEnabled(false);
+        btn.setAlpha(0.5f);
+        pb.setVisibility(View.VISIBLE);
+        tvError.setVisibility(View.GONE);
+        
+        Toast.makeText(this, "Connecting to Google...", Toast.LENGTH_SHORT).show();
 
-                    @Override
-                    public void onError(GetCredentialException e) {
-                        runOnUiThread(() ->
-                                showError(tvError, "Google sign-in failed: " + e.getMessage())
-                        );
+        // Safety timeout: reset UI if Google doesn't respond in 12 seconds
+        new android.os.Handler(android.os.Looper.getMainLooper()).postDelayed(() -> {
+            if (pb.getVisibility() == View.VISIBLE) {
+                resetGoogleButton(btn, pb);
+                showError(tvError, "Connection timed out. Please check your internet and try again.");
+            }
+        }, 12000);
+
+        try {
+            GetCredentialRequest request = GoogleAuthHelper.buildRequest();
+            credentialManager.getCredentialAsync(
+                    this,
+                    request,
+                    null,
+                    ContextCompat.getMainExecutor(this),
+                    new CredentialManagerCallback<GetCredentialResponse, GetCredentialException>() {
+                        @Override
+                        public void onResult(GetCredentialResponse response) {
+                            handleGoogleCredential(response, btn, pb, tvError);
+                        }
+
+                        @Override
+                        public void onError(GetCredentialException e) {
+                            runOnUiThread(() -> {
+                                resetGoogleButton(btn, pb);
+                                showError(tvError, "Google Error: " + e.getMessage());
+                            });
+                        }
                     }
-                }
-        );
+            );
+        } catch (Exception e) {
+            resetGoogleButton(btn, pb);
+            showError(tvError, "Critical: " + e.getMessage());
+        }
     }
 
     private void handleGoogleCredential(GetCredentialResponse response,
+                                        MaterialButton btn,
+                                        ProgressBar pb,
                                         TextView tvError) {
         Credential credential = response.getCredential();
-        if (!(credential instanceof CustomCredential)) return;
-        if (!credential.getType()
-                .equals(GoogleIdTokenCredential.TYPE_GOOGLE_ID_TOKEN_CREDENTIAL)) return;
+        
+        if (!(credential instanceof CustomCredential) || 
+            !credential.getType().equals(GoogleIdTokenCredential.TYPE_GOOGLE_ID_TOKEN_CREDENTIAL)) {
+            resetGoogleButton(btn, pb);
+            showError(tvError, "Invalid account type selected.");
+            return;
+        }
 
-        GoogleIdTokenCredential googleCred =
-                GoogleIdTokenCredential.createFrom(
-                        ((CustomCredential) credential).getData()
-                );
+        try {
+            GoogleIdTokenCredential googleCred = GoogleIdTokenCredential.createFrom(credential.getData());
+            String googleId = googleCred.getId(); // This is often the email or unique sub
+            String email = googleCred.getId();    // Use the ID as the identifier
 
-        String googleId = googleCred.getId(); // unique Google account ID
-
-        viewModel.loginWithGoogle(googleId).observe(this, user -> {
-            if (user != null) {
-                // Account already linked → sign in directly
-                session.saveSession(user);
-                navigateByRole(user.role);
-            } else {
-                // Not linked yet → ask them to log in with password first
-                pendingGoogleId = googleId;
-                runOnUiThread(() -> {
-                    showError(tvError,
-                            "First time? Enter your Employee ID and password " +
-                                    "below to link your Google account.");
+            viewModel.loginWithGoogle(googleId, email).observe(this, user -> {
+                resetGoogleButton(btn, pb);
+                if (user != null) {
+                    session.saveSession(user);
+                    navigateByRole(user.role);
+                } else {
+                    pendingGoogleId = googleId;
+                    showError(tvError, "Account not found. Please log in with Employee ID first to link your Google account.");
                     tvError.setTextColor(getColor(R.color.color_still_in));
-                    tvError.setVisibility(View.VISIBLE);
-                });
-            }
+                }
+            });
+        } catch (Exception e) {
+            resetGoogleButton(btn, pb);
+            showError(tvError, "Error reading Google profile.");
+        }
+    }
+
+    private void resetGoogleButton(MaterialButton btn, ProgressBar pb) {
+        runOnUiThread(() -> {
+            btn.setEnabled(true);
+            btn.setAlpha(1.0f);
+            pb.setVisibility(View.GONE);
         });
     }
 

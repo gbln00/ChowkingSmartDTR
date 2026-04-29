@@ -7,143 +7,194 @@
     android:background="@color/surface_page"
     android:fillViewport="true">
 
-    <LinearLayout
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:gravity="center"
-        android:padding="32dp"
-        android:minHeight="600dp">
+        android:layout_height="wrap_content">
 
-        <!-- Logo + brand -->
-        <ImageView
-            android:layout_width="72dp"
-            android:layout_height="72dp"
-            android:src="@mipmap/ic_launcher"
-            android:layout_marginBottom="8dp"
-            android:contentDescription="App logo"/>
+        <!-- Red Header Background -->
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="280dp"
+            android:background="@drawable/bg_login_header"/>
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Chowking Smart DTR"
-            android:textSize="22sp"
-            android:textStyle="bold"
-            android:textColor="@color/chowking_red"
-            android:layout_marginBottom="4dp"/>
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="QR attendance system"
-            android:textSize="13sp"
-            android:textColor="?android:attr/textColorSecondary"
-            android:layout_marginBottom="36dp"/>
-
-        <!-- Login card -->
-        <com.google.android.material.card.MaterialCardView
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:cardCornerRadius="16dp"
-            app:cardElevation="0dp"
-            app:strokeWidth="0.5dp"
-            app:strokeColor="?attr/colorOutline"
-            app:cardBackgroundColor="@color/surface_card">
+            android:orientation="vertical"
+            android:gravity="center"
+            android:padding="24dp">
 
-            <LinearLayout
+            <!-- Circular Logo Container -->
+            <com.google.android.material.card.MaterialCardView
+                android:layout_width="110dp"
+                android:layout_height="110dp"
+                android:layout_marginTop="40dp"
+                android:layout_marginBottom="16dp"
+                app:cardCornerRadius="55dp"
+                app:cardElevation="8dp"
+                app:strokeWidth="0dp">
+                <ImageView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:padding="12dp"
+                    android:src="@drawable/ic_logo_chowking"
+                    android:contentDescription="Chowking Logo"
+                    android:scaleType="centerInside"
+                    android:background="@color/white"/>
+            </com.google.android.material.card.MaterialCardView>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Smart DTR"
+                android:textSize="32sp"
+                android:fontFamily="sans-serif-black"
+                android:textColor="@color/white"
+                android:letterSpacing="0.02"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Employee Attendance System"
+                android:textSize="14sp"
+                android:textColor="#FFCDD2"
+                android:layout_marginBottom="32dp"/>
+
+            <!-- Login Card -->
+            <com.google.android.material.card.MaterialCardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:padding="20dp">
+                app:cardCornerRadius="28dp"
+                app:cardElevation="4dp"
+                app:strokeWidth="0dp"
+                app:cardBackgroundColor="@color/surface_card">
 
-                <com.google.android.material.textfield.TextInputLayout
+                <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="Employee ID"
-                    android:layout_marginBottom="14dp"
-                    style="@style/Widget.Material3.TextInputLayout.OutlinedBox">
-                    <com.google.android.material.textfield.TextInputEditText
-                        android:id="@+id/etEmployeeId"
+                    android:orientation="vertical"
+                    android:padding="28dp">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Welcome Back"
+                        android:textSize="22sp"
+                        android:textStyle="bold"
+                        android:textColor="@color/text_primary"
+                        android:layout_marginBottom="24dp"/>
+
+                    <com.google.android.material.textfield.TextInputLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:inputType="text"
-                        android:imeOptions="actionNext"/>
-                </com.google.android.material.textfield.TextInputLayout>
+                        android:hint="Employee ID"
+                        android:layout_marginBottom="16dp"
+                        app:startIconDrawable="@drawable/ic_nav_users"
+                        style="@style/Widget.Material3.TextInputLayout.OutlinedBox">
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/etEmployeeId"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:inputType="text"
+                            android:imeOptions="actionNext"/>
+                    </com.google.android.material.textfield.TextInputLayout>
 
-                <com.google.android.material.textfield.TextInputLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:hint="Password"
-                    android:layout_marginBottom="8dp"
-                    app:endIconMode="password_toggle"
-                    style="@style/Widget.Material3.TextInputLayout.OutlinedBox">
-                    <com.google.android.material.textfield.TextInputEditText
-                        android:id="@+id/etPassword"
+                    <com.google.android.material.textfield.TextInputLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:inputType="textPassword"
-                        android:imeOptions="actionDone"/>
-                </com.google.android.material.textfield.TextInputLayout>
+                        android:hint="Password"
+                        android:layout_marginBottom="32dp"
+                        app:startIconDrawable="@drawable/ic_nav_logout"
+                        app:endIconMode="password_toggle"
+                        style="@style/Widget.Material3.TextInputLayout.OutlinedBox">
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/etPassword"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:inputType="textPassword"
+                            android:imeOptions="actionDone"/>
+                    </com.google.android.material.textfield.TextInputLayout>
 
-                <TextView
-                    android:id="@+id/tvError"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textColor="@color/color_absent"
-                    android:textSize="13sp"
-                    android:visibility="gone"
-                    android:layout_marginBottom="12dp"/>
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/btnLogin"
+                        android:layout_width="match_parent"
+                        android:layout_height="60dp"
+                        android:text="Sign In"
+                        android:textSize="16sp"
+                        android:textStyle="bold"
+                        app:cornerRadius="18dp"
+                        app:backgroundTint="@color/chowking_red"
+                        android:elevation="4dp"/>
 
-                <!-- Place this after btnLogin and before the closing </LinearLayout> of the card -->
+                    <TextView
+                        android:id="@+id/tvError"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/color_absent"
+                        android:textSize="13sp"
+                        android:gravity="center"
+                        android:visibility="gone"
+                        android:layout_marginTop="16dp"/>
 
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="1dp"
-                    android:background="?attr/colorOutline"
-                    android:layout_marginVertical="16dp"/>
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginVertical="28dp">
+                        <View
+                            android:layout_width="match_parent"
+                            android:layout_height="1dp"
+                            android:background="@color/divider"
+                            android:layout_centerInParent="true"/>
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="OR"
+                            android:textSize="12sp"
+                            android:paddingHorizontal="16dp"
+                            android:background="@color/surface_card"
+                            android:layout_centerInParent="true"
+                            android:textColor="?android:attr/textColorSecondary"/>
+                    </RelativeLayout>
 
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="or"
-                    android:textSize="12sp"
-                    android:textColor="?android:attr/textColorSecondary"
-                    android:gravity="center"
-                    android:layout_marginBottom="12dp"/>
+                    <FrameLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
 
-                <com.google.android.material.button.MaterialButton
-                    android:id="@+id/btnGoogleSignIn"
-                    style="@style/Widget.Material3.Button.OutlinedButton"
-                    android:layout_width="match_parent"
-                    android:layout_height="52dp"
-                    android:text="Continue with Google"
-                    android:textSize="14sp"
-                    app:strokeColor="?attr/colorOutline"
-                    android:textColor="?android:attr/textColorPrimary"
-                    app:cornerRadius="10dp"
-                    app:icon="@drawable/ic_google"
-                    app:iconGravity="textStart"
-                    app:iconTint="@null"/>
+                        <com.google.android.material.button.MaterialButton
+                            android:id="@+id/btnGoogleSignIn"
+                            style="@style/Widget.Material3.Button.TonalButton"
+                            android:layout_width="match_parent"
+                            android:layout_height="60dp"
+                            android:text="Continue with Google"
+                            android:textSize="15sp"
+                            app:cornerRadius="18dp"
+                            app:icon="@drawable/ic_google"
+                            app:iconGravity="textStart"
+                            app:iconPadding="12dp"
+                            app:iconTint="@null"/>
 
-                <com.google.android.material.button.MaterialButton
-                    android:id="@+id/btnLogin"
-                    android:layout_width="match_parent"
-                    android:layout_height="52dp"
-                    android:text="Log in"
-                    android:textSize="15sp"
-                    app:backgroundTint="@color/chowking_red"
-                    android:textColor="#FFFFFF"
-                    app:cornerRadius="10dp"/>
-            </LinearLayout>
-        </com.google.android.material.card.MaterialCardView>
+                        <ProgressBar
+                            android:id="@+id/pbGoogle"
+                            android:layout_width="24dp"
+                            android:layout_height="24dp"
+                            android:layout_gravity="end|center_vertical"
+                            android:layout_marginEnd="20dp"
+                            android:visibility="gone"
+                            android:indeterminateTint="@color/chowking_red"/>
+                    </FrameLayout>
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Contact your manager if you forgot your credentials"
-            android:textSize="11sp"
-            android:textColor="?android:attr/textColorSecondary"
-            android:gravity="center"
-            android:layout_marginTop="20dp"/>
-    </LinearLayout>
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Forgot credentials? Contact Manager"
+                android:textSize="13sp"
+                android:textColor="?android:attr/textColorSecondary"
+                android:layout_marginTop="40dp"
+                android:layout_marginBottom="24dp"/>
+
+        </LinearLayout>
+    </RelativeLayout>
 </ScrollView>
