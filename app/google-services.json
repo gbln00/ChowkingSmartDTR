@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "118165577053",
+    "project_id": "chowkingsmartdtr",
+    "storage_bucket": "chowkingsmartdtr.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:118165577053:android:3f4316c3f3f4b94a949cb4",
+        "android_client_info": {
+          "package_name": "com.chowking.smartdtr"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDUg1C5AlSoFuF4lR14BSvRry6y1WZuJ-I"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -16,7 +16,7 @@ import com.chowking.smartdtr.model.AttendanceRecord;
 import com.chowking.smartdtr.model.PayrollEntry;
 import com.chowking.smartdtr.model.User;
 
-@Database(entities = {User.class, AttendanceRecord.class, PayrollEntry.class}, version = 3, exportSchema = false)
+@Database(entities = {User.class, AttendanceRecord.class, PayrollEntry.class}, version = 4, exportSchema = false)
 public abstract class AppDatabase extends RoomDatabase {
 
     private static AppDatabase instance;
@@ -39,52 +39,62 @@ public abstract class AppDatabase extends RoomDatabase {
     static final Migration MIGRATION_2_3 = new Migration(2, 3) {
         @Override
         public void migrate(@NonNull SupportSQLiteDatabase db) {
-            // AttendanceRecord new columns - try-catch for idempotency during dev
-            try { db.execSQL("ALTER TABLE attendance ADD COLUMN isNightShift INTEGER NOT NULL DEFAULT 0"); } catch (Exception ignored) {}
-            try { db.execSQL("ALTER TABLE attendance ADD COLUMN isHoliday INTEGER NOT NULL DEFAULT 0"); } catch (Exception ignored) {}
-            try { db.execSQL("ALTER TABLE attendance ADD COLUMN isSpecialHoliday INTEGER NOT NULL DEFAULT 0"); } catch (Exception ignored) {}
+            // AttendanceRecord new columns - Use a safer approach for existing columns
+            // Room validation will fail if we don't handle DEFAULT values exactly as expected.
+            db.execSQL("ALTER TABLE attendance ADD COLUMN isNightShift INTEGER NOT NULL DEFAULT 0");
+            db.execSQL("ALTER TABLE attendance ADD COLUMN isHoliday INTEGER NOT NULL DEFAULT 0");
+            db.execSQL("ALTER TABLE attendance ADD COLUMN isSpecialHoliday INTEGER NOT NULL DEFAULT 0");
 
             // User new columns
-            try { db.execSQL("ALTER TABLE users ADD COLUMN sssLoanMonthly REAL NOT NULL DEFAULT 0.0"); } catch (Exception ignored) {}
-            try { db.execSQL("ALTER TABLE users ADD COLUMN pagibigLoanMonthly REAL NOT NULL DEFAULT 0.0"); } catch (Exception ignored) {}
-            try { db.execSQL("ALTER TABLE users ADD COLUMN mealDeductionRate REAL NOT NULL DEFAULT 0.0"); } catch (Exception ignored) {}
+            db.execSQL("ALTER TABLE users ADD COLUMN sssLoanMonthly REAL NOT NULL DEFAULT 0.0");
+            db.execSQL("ALTER TABLE users ADD COLUMN pagibigLoanMonthly REAL NOT NULL DEFAULT 0.0");
+            db.execSQL("ALTER TABLE users ADD COLUMN mealDeductionRate REAL NOT NULL DEFAULT 0.0");
 
-            // New payroll table - Drop first to ensure we match Room's "Expected" schema perfectly
+            // New payroll table - Ensure alignment with Room's TableInfo expectations
             db.execSQL("DROP TABLE IF EXISTS payroll");
             db.execSQL("CREATE TABLE payroll (" +
-                    "id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL," +
-                    "employeeId TEXT," +
-                    "cutoffFrom TEXT," +
-                    "cutoffTo TEXT," +
-                    "generatedAt INTEGER NOT NULL," +
-                    "basicPay REAL NOT NULL," +
-                    "regularOtPay REAL NOT NULL," +
-                    "nightPremiumPay REAL NOT NULL," +
-                    "legalHolidayPay REAL NOT NULL," +
-                    "specialHolidayPay REAL NOT NULL," +
-                    "holidayOtPay REAL NOT NULL," +
-                    "silPay REAL NOT NULL," +
-                    "grossPay REAL NOT NULL," +
-                    "sssPremium REAL NOT NULL," +
-                    "philhealth REAL NOT NULL," +
-                    "pagibigPremium REAL NOT NULL," +
-                    "sssLoan REAL NOT NULL," +
-                    "pagibigLoan REAL NOT NULL," +
-                    "mealDeduction REAL NOT NULL," +
-                    "totalDeductions REAL NOT NULL," +
-                    "netPay REAL NOT NULL," +
-                    "totalHours REAL NOT NULL," +
-                    "regularHours REAL NOT NULL," +
-                    "otHours REAL NOT NULL," +
-                    "nightHours REAL NOT NULL," +
-                    "holidayHours REAL NOT NULL," +
-                    "daysWorked INTEGER NOT NULL," +
-                    "status TEXT)"
-            );
+                    "id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, " +
+                    "employeeId TEXT, " +
+                    "cutoffFrom TEXT, " +
+                    "cutoffTo TEXT, " +
+                    "generatedAt INTEGER NOT NULL, " +
+                    "basicPay REAL NOT NULL, " +
+                    "regularOtPay REAL NOT NULL, " +
+                    "nightPremiumPay REAL NOT NULL, " +
+                    "legalHolidayPay REAL NOT NULL, " +
+                    "specialHolidayPay REAL NOT NULL, " +
+                    "holidayOtPay REAL NOT NULL, " +
+                    "silPay REAL NOT NULL, " +
+                    "grossPay REAL NOT NULL, " +
+                    "sssPremium REAL NOT NULL, " +
+                    "philhealth REAL NOT NULL, " +
+                    "pagibigPremium REAL NOT NULL, " +
+                    "sssLoan REAL NOT NULL, " +
+                    "pagibigLoan REAL NOT NULL, " +
+                    "mealDeduction REAL NOT NULL, " +
+                    "totalDeductions REAL NOT NULL, " +
+                    "netPay REAL NOT NULL, " +
+                    "totalHours REAL NOT NULL, " +
+                    "regularHours REAL NOT NULL, " +
+                    "otHours REAL NOT NULL, " +
+                    "nightHours REAL NOT NULL, " +
+                    "holidayHours REAL NOT NULL, " +
+                    "daysWorked INTEGER NOT NULL, " +
+                    "status TEXT)");
 
-            // Add unique index for payroll
             db.execSQL("CREATE UNIQUE INDEX IF NOT EXISTS index_payroll_employeeId_cutoffFrom_cutoffTo " +
                     "ON payroll (employeeId, cutoffFrom, cutoffTo)");
+        }
+    };
+
+
+// Add this migration constant:
+    static final Migration MIGRATION_3_4 = new Migration(3, 4) {
+        @Override
+        public void migrate(@NonNull SupportSQLiteDatabase db) {
+            db.execSQL(
+                    "ALTER TABLE users ADD COLUMN googleId TEXT"
+            );
         }
     };
 
@@ -95,7 +105,7 @@ public abstract class AppDatabase extends RoomDatabase {
                             AppDatabase.class,
                             "chowking_dtr_db"
                     )
-                    .addMigrations(MIGRATION_1_2, MIGRATION_2_3)
+                    .addMigrations(MIGRATION_1_2, MIGRATION_2_3, MIGRATION_3_4)
                     .fallbackToDestructiveMigration()
                     .build();
         }

@@ -19,4 +19,12 @@ public class LoginViewModel extends AndroidViewModel {
     public LiveData<User> login(String employeeId, String password) {
         return repository.login(employeeId, password);
     }
+
+    public LiveData<User> loginWithGoogle(String googleId) {
+        return repository.loginWithGoogle(googleId);
+    }
+
+    public void linkGoogle(int userId, String googleId) {
+        repository.linkGoogleToUser(userId, googleId);
+    }
 }

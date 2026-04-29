@@ -32,4 +32,20 @@ public class AuthRepository {
         });
         return result;
     }
+    /** Login via Google — matches googleId stored on the User record */
+    public LiveData<User> loginWithGoogle(String googleId) {
+        MutableLiveData<User> result = new MutableLiveData<>();
+        executor.execute(() -> {
+            User user = userDao.getUserByGoogleId(googleId);
+            result.postValue(user); // null = not linked yet
+        });
+        return result;
+    }
+
+    /** Link a Google account to an existing user (call after password login) */
+    public void linkGoogleToUser(int userId, String googleId) {
+        executor.execute(() ->
+                userDao.linkGoogleAccount(userId, googleId)
+        );
+    }
 }

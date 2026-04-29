@@ -103,6 +103,7 @@ public class ManagerDashboardFragment extends Fragment {
             float finalHours  = totalHours;
 
             requireActivity().runOnUiThread(() -> {
+                if (!isAdded()) return;
                 tvStatPresent.setText(String.valueOf(finalPresent));
                 tvStatStillIn.setText(String.valueOf(finalStillIn));
                 tvStatTotalHours.setText(String.format(Locale.getDefault(), "%.1f", finalHours));

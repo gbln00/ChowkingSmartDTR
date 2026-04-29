@@ -1,5 +1,6 @@
 package com.chowking.smartdtr.model;
 
+import androidx.annotation.Nullable;
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
 
@@ -20,6 +21,10 @@ public class User {
 
     public String employeeId;   // "CHW-001"
     public String fullName;
+    // New in DB v4
+    @Nullable
+    public String googleId = null; // stores the Google account sub/ID
+    public String email;
     public String role;          // "CREW", "MANAGER", "ADMIN"
     public String passwordHash;  // BCrypt — never plain text
 
@@ -39,4 +44,6 @@ public class User {
     public float sssLoanMonthly    = 0f;  // monthly amortization
     public float pagibigLoanMonthly = 0f;
     public float mealDeductionRate  = 0f; // daily meal deduction amount
+
+
 }

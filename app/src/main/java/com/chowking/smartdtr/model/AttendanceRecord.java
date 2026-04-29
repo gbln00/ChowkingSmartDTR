@@ -1,5 +1,6 @@
 package com.chowking.smartdtr.model;
 
+import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
 
@@ -14,7 +15,13 @@ public class AttendanceRecord {
     public long   timeIn;      // System.currentTimeMillis()
     public long   timeOut;     // 0 until punched out
     public float  totalHours;  // filled on punch-out
+
+    @ColumnInfo(defaultValue = "0")
     public int isNightShift    = 0;  // 1 = any hours 10pm–6am
+
+    @ColumnInfo(defaultValue = "0")
     public int isHoliday       = 0;  // 1 = regular holiday (200%)
+
+    @ColumnInfo(defaultValue = "0")
     public int isSpecialHoliday = 0; // 1 = special non-working (130%)
 }

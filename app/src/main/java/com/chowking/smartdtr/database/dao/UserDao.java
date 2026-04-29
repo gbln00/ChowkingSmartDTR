@@ -58,4 +58,12 @@ public interface UserDao {
 
     @Query("SELECT * FROM users WHERE role = 'CREW' AND isActive = 1 ORDER BY fullName ASC")
     List<User> getActiveCrewMembers();
+
+    // ── Google login ───────────────────────────────────────────────────────
+    @Query("SELECT * FROM users WHERE googleId = :googleId AND isActive = 1 LIMIT 1")
+    User getUserByGoogleId(String googleId);
+
+    // ── Link Google account ───────────────────────────────────────────────
+    @Query("UPDATE users SET googleId = :googleId WHERE id = :userId")
+    void linkGoogleAccount(int userId, String googleId);
 }
