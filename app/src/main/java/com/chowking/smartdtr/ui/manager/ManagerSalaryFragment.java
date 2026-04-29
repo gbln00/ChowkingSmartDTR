@@ -1,5 +1,6 @@
 package com.chowking.smartdtr.ui.manager;
 
+import android.app.DatePickerDialog;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -53,6 +54,14 @@ public class ManagerSalaryFragment extends Fragment {
         etFrom      = view.findViewById(R.id.etFromDate);
         etTo        = view.findViewById(R.id.etToDate);
 
+        etFrom.setFocusable(false);
+        etFrom.setClickable(true);
+        etTo.setFocusable(false);
+        etTo.setClickable(true);
+
+        etFrom.setOnClickListener(v -> showDatePicker(etFrom));
+        etTo.setOnClickListener(v -> showDatePicker(etTo));
+
         RecyclerView rv = view.findViewById(R.id.rvSalary);
         adapter = new SalaryAdapter(new ArrayList<>());
         rv.setLayoutManager(new LinearLayoutManager(requireContext()));
@@ -91,5 +100,13 @@ public class ManagerSalaryFragment extends Fragment {
         cal.add(Calendar.DAY_OF_MONTH, (dow == Calendar.SUNDAY) ? -6 : Calendar.MONDAY - dow);
         etFrom.setText(sdf.format(cal.getTime()));
         etTo.setText(sdf.format(Calendar.getInstance().getTime()));
+    }
+
+    private void showDatePicker(TextInputEditText editText) {
+        Calendar cal = Calendar.getInstance();
+        new DatePickerDialog(requireContext(), (view, year, month, dayOfMonth) -> {
+            String date = String.format(Locale.getDefault(), "%04d-%02d-%02d", year, month + 1, dayOfMonth);
+            editText.setText(date);
+        }, cal.get(Calendar.YEAR), cal.get(Calendar.MONTH), cal.get(Calendar.DAY_OF_MONTH)).show();
     }
 }

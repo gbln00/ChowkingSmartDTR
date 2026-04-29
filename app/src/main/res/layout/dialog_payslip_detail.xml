@@ -1,0 +1,253 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="20dp">
+
+        <!-- Header -->
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:id="@+id/tvPayslipPeriod"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="2026-03-26 → 2026-04-10"
+                android:textAppearance="?attr/textAppearanceTitleLarge"
+                android:textColor="@color/chowking_red"
+                android:textStyle="bold" />
+
+            <com.google.android.material.chip.Chip
+                android:id="@+id/chipPayslipStatus"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/tvPayslipPeriod"
+                android:layout_marginTop="4dp"
+                android:text="FINALIZED"
+                app:chipBackgroundColor="@color/color_present"
+                app:ensureMinTouchTargetSize="false" />
+
+        </RelativeLayout>
+
+        <TextView
+            android:id="@+id/tvPayslipEmployee"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:text="JOHN DOE"
+            android:textAppearance="?attr/textAppearanceTitleMedium" />
+
+        <TextView
+            android:id="@+id/tvPayslipId"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="EMP-12345"
+            android:textSize="14sp"
+            android:textColor="@color/nav_unselected" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginVertical="16dp"
+            android:background="#EEEEEE" />
+
+        <!-- Hours Summary -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="WORK SUMMARY"
+            android:textSize="12sp"
+            android:textStyle="bold"
+            android:textColor="@color/nav_unselected" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:orientation="horizontal">
+            <TextView android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:text="Days Worked" />
+            <TextView android:id="@+id/tvDaysWorked" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="13 days" android:textStyle="bold" />
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:orientation="horizontal">
+            <TextView android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:text="Regular Hours" />
+            <TextView android:id="@+id/tvRegularHrs" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="104.00 hrs" />
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:orientation="horizontal">
+            <TextView android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:text="Overtime Hours" />
+            <TextView android:id="@+id/tvOtHrs" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="5.00 hrs" />
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:orientation="horizontal">
+            <TextView android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:text="Night Premium Hours" />
+            <TextView android:id="@+id/tvNightHrs" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="10.00 hrs" />
+        </LinearLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginVertical="16dp"
+            android:background="#EEEEEE" />
+
+        <!-- Earnings -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="EARNINGS"
+            android:textSize="12sp"
+            android:textStyle="bold"
+            android:textColor="@color/nav_unselected" />
+
+        <TableLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp">
+            <TableRow android:layout_marginBottom="4dp">
+                <TextView android:layout_width="0dp" android:layout_weight="1" android:text="Basic Pay" />
+                <TextView android:id="@+id/tvBasicPay" android:text="₱0.00" />
+            </TableRow>
+            <TableRow android:layout_marginBottom="4dp">
+                <TextView android:layout_width="0dp" android:layout_weight="1" android:text="Overtime Pay" />
+                <TextView android:id="@+id/tvOvertimePay" android:text="₱0.00" />
+            </TableRow>
+            <TableRow android:layout_marginBottom="4dp">
+                <TextView android:layout_width="0dp" android:layout_weight="1" android:text="Night Premium" />
+                <TextView android:id="@+id/tvNightPremium" android:text="₱0.00" />
+            </TableRow>
+            <TableRow android:layout_marginBottom="4dp">
+                <TextView android:layout_width="0dp" android:layout_weight="1" android:text="Legal Holiday Pay" />
+                <TextView android:id="@+id/tvHolidayPay" android:text="₱0.00" />
+            </TableRow>
+            <TableRow android:layout_marginBottom="4dp">
+                <TextView android:layout_width="0dp" android:layout_weight="1" android:text="Special Holiday Pay" />
+                <TextView android:id="@+id/tvSplHolidayPay" android:text="₱0.00" />
+            </TableRow>
+            <TableRow android:layout_marginBottom="4dp">
+                <TextView android:layout_width="0dp" android:layout_weight="1" android:text="Holiday OT Pay" />
+                <TextView android:id="@+id/tvHolidayOtPay" android:text="₱0.00" />
+            </TableRow>
+            <TableRow android:layout_marginBottom="4dp">
+                <TextView android:layout_width="0dp" android:layout_weight="1" android:text="SIL Pay" />
+                <TextView android:id="@+id/tvSilPay" android:text="₱0.00" />
+            </TableRow>
+            <View android:layout_height="1dp" android:background="#EEEEEE" android:layout_marginVertical="4dp" />
+            <TableRow>
+                <TextView android:layout_width="0dp" android:layout_weight="1" android:text="GROSS PAY" android:textStyle="bold" />
+                <TextView android:id="@+id/tvGrossPay" android:text="₱0.00" android:textStyle="bold" />
+            </TableRow>
+        </TableLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginVertical="16dp"
+            android:background="#EEEEEE" />
+
+        <!-- Deductions -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="DEDUCTIONS"
+            android:textSize="12sp"
+            android:textStyle="bold"
+            android:textColor="@color/nav_unselected" />
+
+        <TableLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp">
+            <TableRow android:layout_marginBottom="4dp">
+                <TextView android:layout_width="0dp" android:layout_weight="1" android:text="SSS Premium" />
+                <TextView android:id="@+id/tvSssPremium" android:text="₱0.00" android:textColor="@color/color_absent" />
+            </TableRow>
+            <TableRow android:layout_marginBottom="4dp">
+                <TextView android:layout_width="0dp" android:layout_weight="1" android:text="PhilHealth" />
+                <TextView android:id="@+id/tvPhilhealth" android:text="₱0.00" android:textColor="@color/color_absent" />
+            </TableRow>
+            <TableRow android:layout_marginBottom="4dp">
+                <TextView android:layout_width="0dp" android:layout_weight="1" android:text="Pag-IBIG Premium" />
+                <TextView android:id="@+id/tvPagibig" android:text="₱0.00" android:textColor="@color/color_absent" />
+            </TableRow>
+            <TableRow android:layout_marginBottom="4dp">
+                <TextView android:layout_width="0dp" android:layout_weight="1" android:text="SSS Loan" />
+                <TextView android:id="@+id/tvSssLoan" android:text="₱0.00" android:textColor="@color/color_absent" />
+            </TableRow>
+            <TableRow android:layout_marginBottom="4dp">
+                <TextView android:layout_width="0dp" android:layout_weight="1" android:text="Pag-IBIG Loan" />
+                <TextView android:id="@+id/tvPagibigLoan" android:text="₱0.00" android:textColor="@color/color_absent" />
+            </TableRow>
+            <TableRow android:layout_marginBottom="4dp">
+                <TextView android:layout_width="0dp" android:layout_weight="1" android:text="Meal Deduction" />
+                <TextView android:id="@+id/tvMealDeduction" android:text="₱0.00" android:textColor="@color/color_absent" />
+            </TableRow>
+            <View android:layout_height="1dp" android:background="#EEEEEE" android:layout_marginVertical="4dp" />
+            <TableRow>
+                <TextView android:layout_width="0dp" android:layout_weight="1" android:text="TOTAL DEDUCTIONS" android:textStyle="bold" />
+                <TextView android:id="@+id/tvTotalDeductions" android:text="₱0.00" android:textStyle="bold" android:textColor="@color/color_absent" />
+            </TableRow>
+        </TableLayout>
+
+        <!-- Net Pay Footer -->
+        <com.google.android.material.card.MaterialCardView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="24dp"
+            app:cardBackgroundColor="@color/chowking_red_light"
+            app:cardCornerRadius="12dp"
+            app:strokeWidth="0dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:orientation="vertical"
+                android:padding="16dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="NET PAY"
+                    android:textSize="12sp"
+                    android:textStyle="bold"
+                    android:textColor="@color/chowking_red" />
+
+                <TextView
+                    android:id="@+id/tvNetPayAmount"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="₱0.00"
+                    android:textAppearance="?attr/textAppearanceHeadlineMedium"
+                    android:textColor="@color/chowking_red"
+                    android:textStyle="bold" />
+
+            </LinearLayout>
+        </com.google.android.material.card.MaterialCardView>
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnSharePayslip"
+            style="@style/Widget.Material3.Button.TonalButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:text="Share / Export as Text"
+            app:icon="@android:drawable/ic_menu_share" />
+
+    </LinearLayout>
+</androidx.core.widget.NestedScrollView>

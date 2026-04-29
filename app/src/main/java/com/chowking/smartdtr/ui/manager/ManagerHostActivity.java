@@ -71,6 +71,8 @@ public class ManagerHostActivity extends AppCompatActivity
             loadFragment(new ManagerReportFragment(), "Report");
         } else if (id == R.id.nav_manager_salary) {
             loadFragment(new ManagerSalaryFragment(), "Salary");
+        } else if (id == R.id.nav_manager_payroll) {
+            loadFragment(new ManagerPayrollFragment(), "Payroll");
         } else if (id == R.id.nav_logout) {
             confirmLogout();
             return true;

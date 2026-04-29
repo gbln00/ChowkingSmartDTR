@@ -1,11 +1,13 @@
 package com.chowking.smartdtr.ui.admin;
 
 import android.os.Bundle;
+import android.text.InputType;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
+import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
@@ -44,12 +46,11 @@ public class AdminManageUsersFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
         RecyclerView rv = view.findViewById(R.id.rvUsers);
-        // Pass all three listeners — edit is now included
         adapter = new UserAdapter(
                 new ArrayList<>(),
                 this::onResetPassword,
                 this::onToggleActive,
-                this::onEditUser       // ← NEW
+                this::onEditUser
         );
         rv.setLayoutManager(new LinearLayoutManager(requireContext()));
         rv.setAdapter(adapter);
@@ -65,38 +66,42 @@ public class AdminManageUsersFragment extends Fragment {
         });
     }
 
-    // ── Edit User dialog ───────────────────────────────────────────────────
-
     private void onEditUser(User user) {
-        // Build dialog layout programmatically so we can reuse the fragment layout style
         LinearLayout layout = new LinearLayout(requireContext());
         layout.setOrientation(LinearLayout.VERTICAL);
         layout.setPadding(48, 24, 48, 8);
 
-        // Full Name
         TextInputLayout tilName = makeInputLayout("Full Name");
         TextInputEditText etName = new TextInputEditText(requireContext());
         etName.setText(user.fullName);
         tilName.addView(etName);
         layout.addView(tilName);
 
-        // Position
         TextInputLayout tilPos = makeInputLayout("Position");
         TextInputEditText etPos = new TextInputEditText(requireContext());
         etPos.setText(user.position);
         tilPos.addView(etPos);
         layout.addView(tilPos);
 
-        // Hourly Rate
         TextInputLayout tilRate = makeInputLayout("Hourly Rate (₱/hr)");
         TextInputEditText etRate = new TextInputEditText(requireContext());
-        etRate.setInputType(android.text.InputType.TYPE_CLASS_NUMBER
-                | android.text.InputType.TYPE_NUMBER_FLAG_DECIMAL);
+        etRate.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_DECIMAL);
         etRate.setText(String.valueOf(user.hourlyRate));
         tilRate.addView(etRate);
         layout.addView(tilRate);
 
-        // Role dropdown
+        EditText etSssLoan = makeEditText("SSS Loan / cutoff (₱)",
+                String.valueOf(user.sssLoanMonthly), InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_DECIMAL);
+        layout.addView(etSssLoan);
+
+        EditText etPagibigLoan = makeEditText("Pag-IBIG Loan / cutoff (₱)",
+                String.valueOf(user.pagibigLoanMonthly), InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_DECIMAL);
+        layout.addView(etPagibigLoan);
+
+        EditText etMealDed = makeEditText("Meal deduction / day (₱)",
+                String.valueOf(user.mealDeductionRate), InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_DECIMAL);
+        layout.addView(etMealDed);
+
         TextInputLayout tilRole = new TextInputLayout(
                 requireContext(), null,
                 com.google.android.material.R.attr.textInputOutlinedExposedDropdownMenuStyle);
@@ -108,7 +113,7 @@ public class AdminManageUsersFragment extends Fragment {
         tilRole.setLayoutParams(lpRole);
 
         AutoCompleteTextView acRole = new AutoCompleteTextView(requireContext());
-        acRole.setInputType(android.text.InputType.TYPE_NULL);
+        acRole.setInputType(InputType.TYPE_NULL);
         String[] roles = {"CREW", "MANAGER", "ADMIN"};
         ArrayAdapter<String> roleAdapter = new ArrayAdapter<>(
                 requireContext(), android.R.layout.simple_dropdown_item_1line, roles);
@@ -125,37 +130,30 @@ public class AdminManageUsersFragment extends Fragment {
                 .setTitle("Edit — " + user.fullName)
                 .setView(layout)
                 .setPositiveButton("Save", (d, w) -> {
-                    String newName = etName.getText() != null
-                            ? etName.getText().toString().trim() : "";
-                    String newPos  = etPos.getText()  != null
-                            ? etPos.getText().toString().trim()  : "";
+                    String newName = etName.getText() != null ? etName.getText().toString().trim() : "";
+                    String newPos = etPos.getText() != null ? etPos.getText().toString().trim() : "";
                     String newRole = acRole.getText().toString().trim();
-                    String rateStr = etRate.getText() != null
-                            ? etRate.getText().toString().trim() : "";
+                    String rateStr = etRate.getText() != null ? etRate.getText().toString().trim() : "";
 
                     if (newName.isEmpty()) {
-                        Toast.makeText(requireContext(),
-                                "Name cannot be empty.", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(requireContext(), "Name cannot be empty.", Toast.LENGTH_SHORT).show();
                         return;
                     }
 
-                    float newRate = user.hourlyRate;
                     try {
-                        if (!rateStr.isEmpty()) newRate = Float.parseFloat(rateStr);
+                        user.fullName = newName;
+                        user.position = newPos;
+                        user.role = newRole;
+                        if (!rateStr.isEmpty()) user.hourlyRate = Float.parseFloat(rateStr);
+                        user.sssLoanMonthly = Float.parseFloat(etSssLoan.getText().toString());
+                        user.pagibigLoanMonthly = Float.parseFloat(etPagibigLoan.getText().toString());
+                        user.mealDeductionRate = Float.parseFloat(etMealDed.getText().toString());
                     } catch (NumberFormatException ignored) {}
-
-                    final float finalRate = newRate;
-                    user.fullName   = newName;
-                    user.position   = newPos.isEmpty() ? user.position : newPos;
-                    user.role       = newRole.isEmpty() ? user.role : newRole;
-                    user.hourlyRate = finalRate;
 
                     Executors.newSingleThreadExecutor().execute(() -> {
                         AppDatabase.getInstance(requireContext()).userDao().updateUser(user);
                         requireActivity().runOnUiThread(() -> {
-                            Toast.makeText(requireContext(),
-                                    "✓ " + user.fullName + " updated.",
-                                    Toast.LENGTH_SHORT).show();
+                            Toast.makeText(requireContext(), "✓ " + user.fullName + " updated.", Toast.LENGTH_SHORT).show();
                             loadUsers();
                         });
                     });
@@ -164,13 +162,10 @@ public class AdminManageUsersFragment extends Fragment {
                 .show();
     }
 
-    // ── Reset Password dialog ──────────────────────────────────────────────
-
     private void onResetPassword(User user) {
-        android.widget.EditText input = new android.widget.EditText(requireContext());
+        EditText input = new EditText(requireContext());
         input.setHint("New password");
-        input.setInputType(android.text.InputType.TYPE_CLASS_TEXT
-                | android.text.InputType.TYPE_TEXT_VARIATION_PASSWORD);
+        input.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD);
         input.setPadding(48, 24, 48, 24);
 
         new AlertDialog.Builder(requireContext())
@@ -192,8 +187,6 @@ public class AdminManageUsersFragment extends Fragment {
                 .show();
     }
 
-    // ── Activate / Deactivate ──────────────────────────────────────────────
-
     private void onToggleActive(User user) {
         String action = user.isActive == 1 ? "deactivate" : "reactivate";
         new AlertDialog.Builder(requireContext())
@@ -213,8 +206,6 @@ public class AdminManageUsersFragment extends Fragment {
                 .show();
     }
 
-    // ── Helper ─────────────────────────────────────────────────────────────
-
     private TextInputLayout makeInputLayout(String hint) {
         TextInputLayout til = new TextInputLayout(
                 requireContext(), null,
@@ -226,5 +217,18 @@ public class AdminManageUsersFragment extends Fragment {
         lp.setMargins(0, 0, 0, 16);
         til.setLayoutParams(lp);
         return til;
+    }
+
+    private EditText makeEditText(String hint, String value, int inputType) {
+        EditText et = new EditText(requireContext());
+        et.setHint(hint);
+        et.setText(value);
+        et.setInputType(inputType);
+        LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.MATCH_PARENT,
+                LinearLayout.LayoutParams.WRAP_CONTENT);
+        lp.setMargins(0, 0, 0, 16);
+        et.setLayoutParams(lp);
+        return et;
     }
 }

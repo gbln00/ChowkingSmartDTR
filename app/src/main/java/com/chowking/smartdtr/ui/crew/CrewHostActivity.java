@@ -68,6 +68,8 @@ public class CrewHostActivity extends AppCompatActivity
             loadFragment(new CrewDashboardFragment(), "Home");
         } else if (id == R.id.nav_crew_history) {
             loadFragment(new CrewHistoryFragment(), "My History");
+        } else if (id == R.id.nav_crew_payslip) {
+            loadFragment(new CrewPayslipFragment(), "My Payslip");
         } else if (id == R.id.nav_logout) {
             confirmLogout();
             return true;

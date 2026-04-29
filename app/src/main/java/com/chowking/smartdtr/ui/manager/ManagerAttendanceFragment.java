@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -117,6 +118,24 @@ public class ManagerAttendanceFragment extends Fragment {
                 .setNegativeButton("Delete", (d, w) -> confirmDelete(record))
                 .setNeutralButton("Cancel", null)
                 .show();
+
+        // Add to showEditDialog() in ManagerAttendanceFragment:
+        CheckBox cbNight   = new CheckBox(requireContext());
+        cbNight.setText("Night shift (NP)");
+        cbNight.setChecked(record.isNightShift == 1);
+
+        CheckBox cbHoliday = new CheckBox(requireContext());
+        cbHoliday.setText("Regular holiday");
+        cbHoliday.setChecked(record.isHoliday == 1);
+
+        CheckBox cbSpecial = new CheckBox(requireContext());
+        cbSpecial.setText("Special non-working holiday");
+        cbSpecial.setChecked(record.isSpecialHoliday == 1);
+
+// In saveEdit(), before updateRecord():
+        record.isNightShift     = cbNight.isChecked()   ? 1 : 0;
+        record.isHoliday        = cbHoliday.isChecked() ? 1 : 0;
+        record.isSpecialHoliday = cbSpecial.isChecked() ? 1 : 0;
     }
 
     private void saveEdit(AttendanceRecord record, String inStr, String outStr) {

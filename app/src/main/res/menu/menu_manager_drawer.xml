@@ -21,6 +21,10 @@
             android:id="@+id/nav_manager_salary"
             android:icon="@drawable/ic_nav_salary"
             android:title="Salary"/>
+        <item
+            android:id="@+id/nav_manager_payroll"
+            android:icon="@drawable/ic_nav_payroll"
+            android:title="Payroll"/>
     </group>
     <group android:id="@+id/group_account">
         <item

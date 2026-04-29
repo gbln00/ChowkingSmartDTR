@@ -35,4 +35,8 @@ public class User {
      * Deactivated users cannot log in but their attendance records are preserved.
      */
     public int isActive = 1;
+
+    public float sssLoanMonthly    = 0f;  // monthly amortization
+    public float pagibigLoanMonthly = 0f;
+    public float mealDeductionRate  = 0f; // daily meal deduction amount
 }
